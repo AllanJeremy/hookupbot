@@ -9,13 +9,13 @@ class Cmd_select
         $this->ci = &get_instance();
     }
 
-    //Handle commands ~ all commands will start running through this function
+    //Handle a single command ~ all commands will start running through this function
     public function handle_command($cmd)
     {
         //If the command was not okay print the error message
-        if(!$cmd['ok'] || !is_array($cmd['commands']))
+        if( !is_array($cmd))
         {
-            return $this->ci->telegram->send_message(TEST_CHAT_ID,$cmd['message']);
+            return $this->ci->telegram->send_message(TEST_CHAT_ID,'Invalid command ~ generic ass message');
         }
 
         //TODO: Add implementation

@@ -13,7 +13,7 @@ class Cmd_profile
     public function handle_command($cmd)
     {
         //If the command was not okay print the error message
-        if(!$cmd['ok'] || !is_array($cmd['commands']))
+        if( !is_array($cmd))
         {
             return $this->ci->telegram->send_message(TEST_CHAT_ID,$cmd['message']);
         }
