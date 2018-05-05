@@ -1,13 +1,15 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-$test_command = '/profile info
-/p 
-/
-/p set age 20
-/select hookup 21234';
 $ci = &get_instance();
+$user_input = json_decode($ci->telegram->get_user_message());
+$commands = $user_input->message->text;
+$chat_id = $user_input->message->chat->id;
+
+// $ci->telegram->send_message($chat_id,'[Ha! it worked] Commands : '.$commands);
+// $ci->telegram->send_message(TEST_CHAT_ID,'Chat id : '.$chat_id);
+
 $ci->load->library('commands/cmd_handler');
-$ci->cmd_handler->handle_command($test_command);
+$ci->cmd_handler->handle_command($ci->cmd_parser->parse());
 /*$some_val = $ci->cmd_parser->parse('/profile info
 /p 
 /

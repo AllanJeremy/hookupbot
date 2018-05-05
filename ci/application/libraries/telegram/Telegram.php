@@ -63,11 +63,11 @@ class Telegram
     //Find the current user message information
     public function get_user_message()
     {
-        return json_decode($this->ci->input->raw_input_stream());
+        return (file_get_contents('php://input'));
     }
     
     //Send message
-    public function send_message($chat_id,$text,$extras=NULL)
+    public function send_message($chat_id,$text='generic text',$extras=NULL)
     {
         $url = $this->api_url.'sendMessage?';
 

@@ -4,8 +4,10 @@
 class Cmd_profile
 {
     public $ci;
+    public $user_chat_id;
     function __construct()
     {
+        $this->user_chat_id = $this->ci->telegram->get_user_message()->message->chat->id;
         $this->ci = &get_instance();
     }
 
@@ -15,11 +17,11 @@ class Cmd_profile
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {
-            return $this->ci->telegram->send_message($user_chat_id,$cmd['message']);
+            return $this->ci->telegram->send_message($this->user_chat_id,$cmd['message']);
         }
 
         //TODO: Add implementation
-        $this->ci->telegram->send_message($user_chat_id,'You used the profile command punk');
+        $this->ci->telegram->send_message($this->user_chat_id,'You used the profile command punk');
     }
 
     /* 

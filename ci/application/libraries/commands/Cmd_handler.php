@@ -13,6 +13,7 @@ class Cmd_handler
     //Handle command ~ entry point for all commands in this library
     public function handle_command($cmd)
     {
+        $ci->telegram->send_message(TEST_CHAT_ID,'cp,,dasdas');
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {
