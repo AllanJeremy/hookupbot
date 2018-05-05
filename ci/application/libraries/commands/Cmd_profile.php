@@ -15,11 +15,11 @@ class Cmd_profile
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {
-            return $this->ci->telegram->send_message(TEST_CHAT_ID,$cmd['message']);
+            return $this->ci->telegram->send_message($user_chat_id,$cmd['message']);
         }
 
         //TODO: Add implementation
-        $this->ci->telegram->send_message(TEST_CHAT_ID,'You used the profile command punk');
+        $this->ci->telegram->send_message($user_chat_id,'You used the profile command punk');
     }
 
     /* 

@@ -92,7 +92,9 @@ define('CMD_FIND','/find');#Find hookups command
 define('CMD_ADD','/add');#Add to hookup pool command
 define('CMD_SELECT','/select');#Select a hookup command
 define('CMD_VIEW','/view');#View single profile command
-define('CMD_REMOVE','/remove');#Profile command
+define('CMD_HELP','/remove');#Help command
+define('CMD_SETTINGS','/remove');#Settings command
+define('CMD_START','/remove');#Start command
 define('TEST_CHAT_ID','540434472');
 
 /* 

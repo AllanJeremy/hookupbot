@@ -24,6 +24,7 @@ class Telegram
     {
         return file_get_contents($url);
     }
+
     // Parse params and return a url string with the concatenated (in some cases) params
     private function _parse_params($params,$is_concat=TRUE)
     {
@@ -59,6 +60,12 @@ class Telegram
         return $url;
     }
 
+    //Find the current user message information
+    public function get_user_message()
+    {
+        return json_decode($this->ci->input->raw_input_stream());
+    }
+    
     //Send message
     public function send_message($chat_id,$text,$extras=NULL)
     {
