@@ -93,6 +93,7 @@ define('CMD_ADD','/add');#Add to hookup pool command
 define('CMD_SELECT','/select');#Select a hookup command
 define('CMD_VIEW','/view');#View single profile command
 define('CMD_REMOVE','/remove');#Profile command
+define('TEST_CHAT_ID','540434472');
 
 /* 
 SUB-COMMANDS AVAILABLE FOR THE BOT
