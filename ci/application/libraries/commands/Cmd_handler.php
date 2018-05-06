@@ -27,6 +27,22 @@ class Cmd_handler
             echo '<br>Command string :'.$cmd_str;
             switch($cmd_str)
             {
+                case CMD_START:
+                    $this->ci->load->library('commands/cmd_start');
+                    $this->ci->cmd_start->handle_command($cmd);
+                break;
+                case CMD_SETTINGS:
+                    $this->ci->load->library('commands/cmd_settings');
+                    $this->ci->cmd_settings->handle_command($cmd);
+                break;
+                case CMD_HELP:
+                    $this->ci->load->library('commands/cmd_help');
+                    $this->ci->cmd_help->handle_command($cmd);
+                break;
+                case CMD_PAYMENT:
+                    $this->ci->load->library('commands/cmd_payment');
+                    $this->ci->cmd_payment->handle_command($cmd);
+                break;
                 case CMD_PROFILE:
                     $this->ci->load->library('commands/cmd_profile');
                     $this->ci->cmd_profile->handle_command($cmd);

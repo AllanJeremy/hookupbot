@@ -96,6 +96,7 @@ define('CMD_HELP','/remove');#Help command
 define('CMD_REMOVE','/remove');#Remove command
 define('CMD_SETTINGS','/settings');#Settings command
 define('CMD_START','/start');#Start command
+define('CMD_PAYMENT','/payment');#Payment command
 define('TEST_CHAT_ID','540434472');
 
 /* 
