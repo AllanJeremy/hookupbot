@@ -9,4 +9,28 @@ class User_model extends CI_Model
     }
 
     //User related functions go here
+
+    //TODO : Add user data
+    public function add_user($data)
+    {
+
+    }
+    
+    //TODO : Update user data
+    public function update_user($user_id,$data)
+    {
+
+    }
+
+    //TODO : Get user data
+    public function get_user_data($user_id)
+    {
+
+    }
+
+    //TODO : Remove user data ~ removes specific data(columns) from user
+    public function remove_user_data($user_id,$data)
+    {
+
+    }
 }
