@@ -9,13 +9,18 @@ class User_model extends CI_Model
     }
 
     //User related functions go here
+    //TODO: User selects & joins
+    private function _user_joins()
+    {
+        
+    }
 
     //TODO : Add user data
     public function add_user($data)
     {
 
     }
-    
+
     //TODO : Update user data
     public function update_user($user_id,$data)
     {

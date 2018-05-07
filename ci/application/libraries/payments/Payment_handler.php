@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-//This class is the gateway to handling hookups
-class Hookup_handler
+//This class is the gateway to making any kind of payments
+class Payment_handler
 {
     public $ci;
 

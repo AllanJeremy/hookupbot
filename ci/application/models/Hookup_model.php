@@ -9,6 +9,25 @@ class Hookup_model extends CI_Model
     }
 
     //Hookup related functions go here
+
+    //TODO: Hookup joins
+    private function _hookup_joins()
+    {
+
+    }
+
+    //TODO: Hookup Request joins
+    private function _hookup_request_joins()
+    {
+
+    }
+
+    //TODO: Pool joins
+    private function _pool_joins()
+    {
+
+    }
+    
     //TODO: Add to hookup pool
     public function add_to_pool($data)
     {
