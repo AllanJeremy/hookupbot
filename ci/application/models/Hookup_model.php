@@ -1,11 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 //This class handles hookups as well as hookup pools
-class Hookup_model extends CI_Model
+class Hookup_model extends MY_Model
 {
     function __construct()
     {
-        $this->load->database;
+        parent::__construct();
     }
 
     //Hookup related functions go here
