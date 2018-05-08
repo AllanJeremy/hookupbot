@@ -85,6 +85,17 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 /* 
+TABLES BEING USED
+*/
+define('TBL_HOOKUPS','hookups');
+define('TBL_POOL','hookup_pool');
+define('TBL_HOOKUP_REQUESTS','hookup_requests');
+define('TBL_PAYMENTS','payments');
+define('TBL_PAYMENT_METHODS','payment_methods');
+define('TBL_USERS','users');
+define('TBL_USER_IMAGES','user_images');
+
+/* 
 COMMANDS AVAILABLE FOR THE BOT
 */
 define('CMD_PROFILE','/profile');#Profile command

@@ -3,39 +3,116 @@
 //This class handles user related operations
 class User_model extends CI_Model
 {
+    
     function __construct()
     {
         $this->load->database;
     }
 
     //User related functions go here
-    //TODO: User selects & joins
-    private function _user_joins()
+    private function _select_user_query($include_phone=FALSE,$include_id=TRUE)
     {
+        $select = '';
+        if($include_id)
+        { $select .= TBL_USER.'.id,'; }
         
+        $select .= TBL_USER.'.is_bot,';
+        $select .= TBL_USER.'.first_name,';
+        $select .= TBL_USER.'.last_name,';
+        $select .= TBL_USER.'.username,';
+        $select .= TBL_USER.'.language_code,';
+        $select .= TBL_USER.'.age,';
+        $select .= TBL_USER.'.gender,';
+        $select .= TBL_USER.'.latitude,';
+        $select .= TBL_USER.'.longitude,';
+        $select .= TBL_USER.'.location_title,';
+        $select .= TBL_USER.'.location_address,';
+        $select .= TBL_USER.'.gender_preference,';
+        $select .= TBL_USER.'.min_age,';
+        $select .= TBL_USER.'.max_age,';
+        $select .= TBL_USER.'.needs_appreciation,';
+        $select .= TBL_USER.'.providing_appreciation,';
+        $select .= TBL_USER.'.details,';
+        $select .= TBL_USER.'.is_banned,';
+        $select .= TBL_USER.'.date_joined';
+
+        if($include_phone)
+        {   $select .= TBL_USER.'.phone' ;}
+
+        return $select;
+    }
+    
+    //User selects & joins
+    private function _user_joins($include_phone=FALSE)
+    {
+        $this->db->select($this->_select_user_query($include_phone));
+        $this->db->from(TBL_USERS);
     }
 
-    //TODO : Add user data
+    //Joins for the user images
+    private function _user_images_joins($include_phone=FALSE)
+    {
+        $select = TBL_USER_IMAGES.'.*,';
+        $select .= $this->_select_user_query($include_phone,FALSE);
+        
+        $this->db->select($select);
+        $this->db->from(TBL_USER_IMAGES);
+        $this->db->join(TBL_USERS,TBL_USER_IMAGES.'.user_id = '.TBL_USERS.'.id');
+    }
+    
+    //Add user data
     public function add_user($data)
     {
-
+        return is_array($data) ? $this->db->insert($data) : FALSE;
     }
 
-    //TODO : Update user data
+    //Update user data
     public function update_user($user_id,$data)
     {
-
+        $this->db->where(TBL_USERS.'.id',$user_id);
+        return is_array($data)? $this->db->update(TBL_USERS,$data) : FALSE;
     }
 
-    //TODO : Get user data
-    public function get_user_data($user_id)
+    //Get user images
+    public function get_user_images($user_id,$include_phone=FALSE)
     {
-
+        $this->_user_images_joins($include_phone);
+        $this->db->where(TBL_USER_IMAGES.'.user_id',$user_id);
+        return $this->db->get();
     }
 
-    //TODO : Remove user data ~ removes specific data(columns) from user
-    public function remove_user_data($user_id,$data)
+    //Get user data ~ returns false if the user doesn't exist
+    public function get_user_data($user_id,$include_phone=FALSE)
     {
+        $this->_user_joins($include_phone);
+        return $this->db->get();
+    }
 
+    //Remove user data 
+    public function remove_user_data($user_id,$columns=NULL)
+    {
+        $this->db->where(TBL_USERS.'.id',$user_id);
+
+        //If there are extra columns provided, removes specific data(columns) from user
+        if(is_array($data))
+        {
+            foreach($columns as $col)
+            {
+                $this->db->set($col,NULL);
+                $this->db->update(TBL_USERS);
+                $this->db->where($col,'*');
+            }
+        }
+        else
+        {
+            return $this->db->delete(TBL_USERS);
+        }
+    }
+
+    //Remove user image
+    public function remove_user_image($image_id)
+    {
+        $this->db->where(TBL_USER_IMAGS.'.file_id',$image_id);
+        return $this->db->delete(TBL_USER_IMAGES);
     }
 }

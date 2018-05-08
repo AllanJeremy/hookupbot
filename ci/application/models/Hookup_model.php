@@ -46,7 +46,7 @@ class Hookup_model extends CI_Model
 
     }
 
-    //TODO: View/get hookup pool matches (for current user)
+    //TODO: View/get hookup pool matches (for current user) ~ retrive all records other than the user him/herself
     public function get_pool_matches($user_id=NULL)#if user id is not set, get the current user
     {
 
