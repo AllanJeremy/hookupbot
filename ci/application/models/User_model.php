@@ -30,7 +30,7 @@ class User_model extends MY_Model
     //Add user data
     public function add_user($data)
     {
-        return is_array($data) ? $this->db->insert($data) : FALSE;
+        return is_array($data) ? $this->db->insert(TBL_USERS,$data) : FALSE;
     }
 
     //Update user data
