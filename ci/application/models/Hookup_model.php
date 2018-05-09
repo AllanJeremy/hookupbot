@@ -3,6 +3,7 @@
 //This class handles hookups as well as hookup pools
 class Hookup_model extends MY_Model
 {
+    private static $_msg_user_not_found = 'Internal error : Could not find the user requested';
     function __construct()
     {
         parent::__construct();
@@ -73,14 +74,78 @@ class Hookup_model extends MY_Model
         return isset($pool_id) ? $this->db->get() : FALSE;
     }
 
-    //TODO: View/get hookup pool matches (for current user) ~ retrive all records other than the user him/herself
+    
+    //View/get hookup pool matches (for current user) ~ retrive all records other than the user him/herself
     public function get_pool_matches($user_id=NULL)#if user id is not set, get the current user
     {
+        //Get the current user id
+        $user_id = $user_id ?? $this->telegram->get_current_user_id();#Id of the user talking to the bot (current user)
 
+        // Get the user from the database
+        $this->load->model('User_model');
+        $user = $this->user_model->get_user_data($user_id);
+        $user = isset($user) ? $user->result_object() : FALSE;
+
+        # Check if the user id was found ~ if not : no need to execute sql
+        if(!$user) # Internal error on our part
+        {  
+            echo self::$_msg_user_not_found;#debug
+            return FALSE; 
+        }
+
+        $this->_pool_joins();
+        
+        #Check for the various criteria to find matches
+
+        // Check if age is within acceptable range
+        if(isset($user->min_age))#Check if they are older than the min age
+        {   $this->db->where('age >=',$user->min_age);   }
+
+        if(isset($user->max_age))#Check if they are younger than or same age as the max age
+        {   $this->db->where('age <=',$user->max_age);   }
+
+        // Check if gender preference matches
+        if(isset($user->gender_preference))
+        {   $this->db->where('gender',$user->gender_preference);   }
+
+        // Check for appreciation
+        if(isset($user->providing_appreciation)) #Match people providing appreciation with people who want to be appreciated
+        {   $this->db->where('needs_appreciation',$user->providing_appreciation);   }
+
+        if(isset($user->needs_appreciation)) #Match people accepting appreciation with people willing to appreciate
+        {   $this->db->or_where('providing_appreciation',$user->needs_appreciation);   }
+
+        //Exclude the user's id when performing the search ~ avoids user returning itself from the pool
+        $this->db->where(TBL_POOL.'.hookup_user_id !=',$user_id);
+
+        //Only get users that have not been taken
+        $this->db->where(TBL_POOL.'.is_taken !=',TRUE);
+        $this->db->get();
     }
 
-    // Make hookup request to user in hookup pool
-    public function make_hookup_request($requester_id,$hookup_pool_id)
+    // Check if a given user is in the hookup pool ~ return the pool_id if user was found and false if not
+    public function is_user_in_pool($user_id=NULL)
+    {
+        $user_id = $user_id ?? $this->telegram->get_current_user_id();
+        
+        # Check if the user id was found ~ if not : no need to execute sql
+        if(!$user_id)
+        {
+            echo self::$_msg_user_not_found;
+            return $user_id;
+        }
+
+        $this->select(TBL_POOL.'.id');#Using a single column select to optimize on speed of fetching and save on data usage as well as reduce load on server per request
+        $this->from(TBL_POOL);
+        $this->db->where(TBL_POOL.'.hookup_user_id',$user_id);
+        $this->db->where(TBL_POOL.'.is_taken !=',TRUE);#User is only considered to be in pool if not taken
+        $user_found = $this->db->get()->result_object();
+
+        return isset($user_found) ? $user_found->id : FALSE;
+    }
+
+    // Make hookup request to user in hookup pool 
+    public function make_hookup_request($hookup_pool_id, $requester_id=NULL)#if no requester id is provided get the current user id
     {
         $this->db->set(TBL_HOOKUP_REQUESTS.'.user_id',$request_id);
         $this->db->set(TBL_HOOKUP_REQUESTS.'.hookup_id',$hookup_pool_id);

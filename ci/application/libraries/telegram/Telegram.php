@@ -66,6 +66,19 @@ class Telegram
         return (file_get_contents('php://input'));
     }
     
+    //Get the current user ~ user that sent the message
+    public function get_current_user()
+    {
+        return $this->get_user_message()->from ?? FALSE;
+    }
+
+    //Get current user id ~ returns id if found : false if not 
+    public function get_current_user_id()# added as an abstraction to prevent errors
+    {
+        $user = $this->get_current_user();
+        return $user ? $user->id : FALSE;
+    }
+
     //Send message
     public function send_message($chat_id,$text='generic text',$extras=NULL)
     {
