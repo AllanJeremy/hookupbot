@@ -1,0 +1,5 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');
+
+$lang['start_intro'] = "Welcome to the Hookmeup bot. I can help you find  hookups easily without the need for a middleman. Set up your profile to get started.";
+
+$lang['start_details'] = "Here's how it works, you start by setting up your information. You can then join a hookup pool if you would like other people to find you or check the current hookup pool for potential hookups matching your criteria. When you request to hookup with someone, they get a confirmation message. When they confirm that they want to hookup with you, you  pay the hookup fee and receive her phone number after confirming the payment. Don't worry, it's a reasonably low hookup fee, lower than normal hookup middlemen/companies. Use /help to see a list of commands.";
