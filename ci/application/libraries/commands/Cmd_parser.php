@@ -20,6 +20,7 @@ class Cmd_parser
         foreach($cmd_input as $cmd)
         { 
             $cmd = trim(preg_replace('/\s+/',' ',$cmd));//Remove any extra whitespace
+            $cmd = strtolower($cmd); //Make the command string all lowercase ~ so any case can be used
             
             //If the command is <=1 meaning /c is the shortest command that can be provided
             if(strlen($cmd) <= 1)
