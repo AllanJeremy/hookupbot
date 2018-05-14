@@ -4,18 +4,13 @@ $ci = &get_instance();
 $ci->load->library('commands/cmd_handler');
 
 $user_input = json_decode($ci->telegram->get_user_message());
-$commands = is_object($user_input) ? $user_input->message->text : '';
 $chat_id = is_object($user_input) ? $user_input->message->chat->id : '';
 $msg_text = is_object($user_input) ? $user_input->message->text : '';
-// $ci->telegram->send_message($chat_id,'[Ha! it worked] Commands : '.$commands);
-// $ci->telegram->send_message(TEST_CHAT_ID,'Chat id : '.$chat_id);
+$commands = $ci->cmd_parser->parse($msg_text);
 
-$ci->cmd_handler->handle_command($ci->cmd_parser->parse($msg_text));
+$ci->cmd_handler->handle_command($commands);
 
-$handled = $ci->cmd_handler->handle_command($parsed);
-
-//Local testing
-echo '<b>Parsed message:</b> <br>';
-var_dump($parsed);
-echo '<br><b>Handled message:</b> <br>';
-var_dump($handled);
+//Testing lang
+$ci->lang->load('cmd_start');
+$stuff = lang('start_intro');
+telegram_debug('[debugging lang] : hm');

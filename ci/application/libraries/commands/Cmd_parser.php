@@ -45,7 +45,7 @@ class Cmd_parser
         }
 
         $is_ok =  is_array($cmd_list) && (count($cmd_list)>0);#if the parse was okay
-        $message = $is_ok ? 'Success' : 'Sorry, I did not understand that';
+        $message = $is_ok ? 'Success' : 'Failed to execute command';
 
         //TODO: Return the commands with the different sections
         return (array(

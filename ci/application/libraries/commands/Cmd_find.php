@@ -7,6 +7,7 @@ class Cmd_find
     function __construct()
     {
         $this->ci = &get_instance();
+        $this->ci->telegram->send_message(TEST_CHAT_ID,'[Cmd_start] Find command handler loaded');
     }
 
     //Handle commands ~ all commands will start running through this function

@@ -7,7 +7,7 @@ class Telegram
     private static $website = 'https://api.telegram.org/bot';
     protected $api_url;
 
-    protected static $invalid_cmd_message = 'I did not understand that command. Use /help for a list of supported commands';# Message shown when an invalid command is provided
+    protected static $invalid_cmd_message = '[telegram library]I did not understand that command. Use /help for a list of supported commands';# Message shown when an invalid command is provided
 
     function __construct()
     {
@@ -84,7 +84,7 @@ class Telegram
     //Send message
     public function send_message($chat_id=NULL,$text='generic text',$extras=NULL)
     {
-        $chat_id = $chat_id ?? $this->get_current_user_id();
+        $chat_id = $chat_id ?? $this->get_current_user_id();#TODO: Potential bug ~ debug this
         $url = $this->api_url.'sendMessage?';
 
         $url .= 'chat_id='.$chat_id;
@@ -102,5 +102,12 @@ class Telegram
     public function send_invalid_cmd_message($chat_id=NULL)
     {
         return $this->send_message($chat_id,self::$invalid_cmd_message);
+    }
+
+    //Send debug message ~ sends to dev chat_id : used for testing
+    public function debug_message($message)
+    {
+        $message = is_array($message) ? json_encode($message) : $message;
+        return $this->send_message(TEST_CHAT_ID,$message);
     }
 }
