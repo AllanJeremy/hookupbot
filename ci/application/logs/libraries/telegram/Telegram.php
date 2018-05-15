@@ -63,7 +63,7 @@ class Telegram
 
     /* PUBLIC FUNCTIONS */
     //Get the message sent by a user
-    public function get_user_message()
+    public function get_user_update()
     {
         return $this->input->raw_input_stream;
     }

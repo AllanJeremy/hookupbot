@@ -13,7 +13,7 @@ class Cmd_handler
     public function handle_command($cmd_obj)
     {
         $commands = (is_array($cmd_obj['commands'])) ? $cmd_obj['commands'] : NULL;//Set commands variable
-        $user_msg = $this->ci->telegram->get_user_message();
+        $user_msg = $this->ci->telegram->get_user_update();
         
         //Telegram
         $this->ci->telegram->send_message('540434472',('User message object : '.json_encode($user_msg)));

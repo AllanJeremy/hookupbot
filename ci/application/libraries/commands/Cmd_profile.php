@@ -7,7 +7,7 @@ class Cmd_profile
     public $user_chat_id;
     function __construct()
     {
-        $this->user_chat_id = $this->ci->telegram->get_user_message()->message->chat->id;
+        $this->user_chat_id = $this->ci->telegram->get_user_update()->message->chat->id;
         $this->ci = &get_instance();
     }
 

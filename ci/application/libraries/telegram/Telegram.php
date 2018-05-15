@@ -63,31 +63,33 @@ class Telegram
     }
 
     //Find the current user message information
-    public function get_user_message()
+    public function get_user_update()
     {
-        return (file_get_contents('php://input'));
+        return json_decode(file_get_contents('php://input'));
     }
     
     //Get the current user ~ user that sent the message
     public function get_current_user()
     {
-        return $this->get_user_message()->from ?? FALSE;
+        return $this->get_user_update()->message->from ?? NULL;
     }
 
     //Get current user id ~ returns id if found : false if not 
     public function get_current_user_id()# added as an abstraction to prevent errors
     {
         $user = $this->get_current_user();
-        return $user ? $user->id : FALSE;
+        return isset($user) ? $user->id : NULL;
     }
 
     //Send message
     public function send_message($chat_id=NULL,$text='generic text',$extras=NULL)
     {
-        $chat_id = $chat_id ?? $this->get_current_user_id();#TODO: Potential bug ~ debug this
+        $chat_id = $chat_id ?? $this->get_current_user_id();#TODO: Potential bug ~ debug this    
         $url = $this->api_url.'sendMessage?';
 
         $url .= 'chat_id='.$chat_id;
+
+        $text = str_replace(' ','%20',$text);#Format the text so that it is url friendly : otherwise messages with spaces won't send correctly ~ fixed issue #02 on github
         $url .= '&text='.$text;
 
         if(isset($extras) && is_array($extras))
@@ -105,9 +107,9 @@ class Telegram
     }
 
     //Send debug message ~ sends to dev chat_id : used for testing
-    public function debug_message($message)
+    public function debug_message($message,$extras=NULL)
     {
         $message = is_array($message) ? json_encode($message) : $message;
-        return $this->send_message(TEST_CHAT_ID,$message);
+        return $this->send_message(TEST_CHAT_ID,$message,$extras);
     }
 }

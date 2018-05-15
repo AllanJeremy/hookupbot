@@ -45,9 +45,7 @@ class Cmd_start
     protected function start()
     {
         $message = lang('start_intro');
-        telegram_debug('Something ');#Working
-        telegram_debug($message);#not working
-        return $this->ci->telegram->send_message(TEST_CHAT_ID,$message);#TODO: Add buttons
+        return $this->ci->telegram->send_message(NULL,$message);#TODO: Add buttons
     }
 
     //Handle start info command

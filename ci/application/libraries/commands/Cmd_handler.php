@@ -17,7 +17,7 @@ class Cmd_handler
         //If the command was not okay print the error message
         if( !is_array($cmd['commands']) || !isset($cmd['commands']) || !$cmd['ok'])
         {
-            return $this->ci->telegram->send_message(TEST_CHAT_ID,'[CMD HANDLER] INVALID COMMAND FORMAT');
+            return $this->ci->telegram->send_message(TEST_CHAT_ID,'I did not understand that command, please check /help for a list of available commands.');
         }
         
         $test_msg = 'Command start class exists : ';
