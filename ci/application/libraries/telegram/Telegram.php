@@ -82,14 +82,15 @@ class Telegram
     }
 
     //Send message
-    public function send_message($chat_id=NULL,$text='generic text',$extras=NULL)
+    public function send_message($text='generic text',$chat_id=NULL,$extras=NULL)
     {
-        $chat_id = $chat_id ?? $this->get_current_user_id();#TODO: Potential bug ~ debug this    
+        $chat_id = $chat_id ?? $this->get_current_user_id();
         $url = $this->api_url.'sendMessage?';
 
         $url .= 'chat_id='.$chat_id;
 
-        $text = str_replace(' ','%20',$text);#Format the text so that it is url friendly : otherwise messages with spaces won't send correctly ~ fixed issue #02 on github
+        #Format the text so that it is url friendly : otherwise messages with spaces won't send correctly ~ fixed issue #02 on github
+        $text = str_replace(' ','%20',$text);
         $url .= '&text='.$text;
 
         if(isset($extras) && is_array($extras))
@@ -103,13 +104,13 @@ class Telegram
     //Send invalid command message
     public function send_invalid_cmd_message($chat_id=NULL)
     {
-        return $this->send_message($chat_id,self::$invalid_cmd_message);
+        return $this->send_message(self::$invalid_cmd_message,$chat_id);
     }
 
     //Send debug message ~ sends to dev chat_id : used for testing
     public function debug_message($message,$extras=NULL)
     {
         $message = is_array($message) ? json_encode($message) : $message;
-        return $this->send_message(TEST_CHAT_ID,$message,$extras);
+        return $this->send_message($message,TEST_CHAT_ID,$extras);
     }
 }

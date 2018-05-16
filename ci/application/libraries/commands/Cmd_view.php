@@ -15,11 +15,11 @@ class Cmd_view
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {
-            return $this->ci->telegram->send_message(TEST_CHAT_ID,$cmd['message']);
+            return $this->ci->telegram->debug_message($cmd['message']);
         }
 
         //TODO: Add implementation
-        $this->ci->telegram->send_message(TEST_CHAT_ID,'You used the view command punk');
+        $this->ci->telegram->debug_message('You used the view command punk');
     }
 
     /* 

@@ -13,16 +13,16 @@ class Cmd_handler
     //Handle command ~ entry point for all commands in this library
     public function handle_command($cmd)
     {
-        // $this->ci->telegram->send_message(TEST_CHAT_ID,json_encode($cmd));
+        // $this->ci->telegram->debug_message(json_encode($cmd));
         //If the command was not okay print the error message
         if( !is_array($cmd['commands']) || !isset($cmd['commands']) || !$cmd['ok'])
         {
-            return $this->ci->telegram->send_message(TEST_CHAT_ID,'I did not understand that command, please check /help for a list of available commands.');
+            return $this->ci->telegram->debug_message('I did not understand that command, please check /help for a list of available commands.');
         }
         
         $test_msg = 'Command start class exists : ';
         $handled = NULL;
-        // $this->ci->telegram->send_message(TEST_CHAT_ID,$test_msg.(class_exists('Cmd_start')));
+        // $this->ci->telegram->debug_message($test_msg.(class_exists('Cmd_start')));
         //Commands available
         foreach($cmd['commands'] as $cmd)
         {
@@ -53,7 +53,7 @@ class Cmd_handler
                 break;
                 case CMD_FIND:
                     $this->ci->load->library('commands/cmd_find');
-                    $this->ci->telegram->send_message(TEST_CHAT_ID,'[In switch] '.$test_msg.(class_exists('Cmd_find')));
+                    $this->ci->telegram->debug_message('[In switch] '.$test_msg.(class_exists('Cmd_find')));
                     $handled = $this->ci->cmd_find->handle_command($cmd);
                 break;
                 case CMD_ADD:
@@ -73,7 +73,7 @@ class Cmd_handler
                     $handled = $this->ci->cmd_view->handle_command($cmd);
                 break;
                 // default: 
-                //     $this->ci->telegram->send_message(TEST_CHAT_ID,self::$unknown_cmd_msg);
+                //     $this->ci->telegram->debug_message(self::$unknown_cmd_msg);
             }
         }
 

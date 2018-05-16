@@ -7,7 +7,7 @@ class Cmd_find
     function __construct()
     {
         $this->ci = &get_instance();
-        $this->ci->telegram->send_message(TEST_CHAT_ID,'[Cmd_start] Find command handler loaded');
+        $this->ci->telegram->debug_message('[Cmd_start] Find command handler loaded');
     }
 
     //Handle commands ~ all commands will start running through this function
@@ -16,11 +16,11 @@ class Cmd_find
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {
-            return $this->ci->telegram->send_message(TEST_CHAT_ID,$cmd['message']);
+            return $this->ci->telegram->debug_message($cmd['message']);
         }
 
         //TODO: Add implementation
-        $this->ci->telegram->send_message(TEST_CHAT_ID,'You used the find command punk');
+        $this->ci->telegram->debug_message('You used the find command punk');
     }
 
     /* 
