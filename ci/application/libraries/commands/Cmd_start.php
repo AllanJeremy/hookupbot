@@ -44,8 +44,29 @@ class Cmd_start
     //Handle the start command
     protected function start()
     {
+        $this->ci->load->model('user');
+        $user = $this->ci->telegram->get_current_user();#Current user
+
+        //Set base user data
+        $data = array(
+            'id' => $user->id,
+            'is_bot' => $user->is_bot,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'username' => $user->username,
+            'language_code' => $user->language_code
+        );
+        
+        //The message to send to the user
         $message = lang('start_intro');
-        return $this->ci->telegram->send_message(NULL,$message);#TODO: Add buttons
+        $set_status = $this->ci->user->set_user($data);
+        
+        $message_status = $this->ci->telegram->send_message(NULL,$message);#TODO: Add buttons
+
+        return array(
+            'ok'=> (bool)$set_status, #Whether the records were set correctly in the database
+            'message'=> $message_status
+        );
     }
 
     //Handle start info command
