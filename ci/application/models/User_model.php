@@ -26,18 +26,34 @@ class User_model extends MY_Model
         $this->db->from(TBL_USER_IMAGES);
         $this->db->join(TBL_USERS,TBL_USER_IMAGES.'.user_id = '.TBL_USERS.'.id');
     }
-    
-    //Add user data
-    public function add_user($data)
-    {
-        return is_array($data) ? $this->db->insert(TBL_USERS,$data) : FALSE;
-    }
 
-    //Update user data
-    public function update_user($user_id,$data)
+    //Update/insert user data
+    public function set_user_data($data,$user_id=NULL)
     {
+        //If the data is not an array (invalid assumed in this case) ~ return false
+        if(!is_array($data))
+        {   return FALSE;   }
+
+        $user_id = $user_id ?? $this->telegram->get_current_user_id();#assume current user id if none provided
+        $this->db->select(TBL_USERS.'.id');#Only select id for faster queries
         $this->db->where(TBL_USERS.'.id',$user_id);
-        return is_array($data)? $this->db->update(TBL_USERS,$data) : FALSE;
+        $user = $this->db->get()->row_object;
+
+        //Reset the query builder so we can build new queries 
+        $this->db->reset_query();#Note : not sure if get() resets query builder hence this
+        $op_result = NULL;#Operation result for the operation we performed ~ insert/update
+
+        //If the user exists ~ update it
+        if(isset($user))
+        {
+            $op_result = $this->db->update(TBL_USERS,$data,array(TBL_USERS.'.id' => $user_id));
+        }
+        else //The user does not exist, add/insert it
+        {   
+            $op_result = $this->db->insert(TBL_USERS,$data);
+        }
+        
+        return $op_result;
     }
 
     //Get user images
