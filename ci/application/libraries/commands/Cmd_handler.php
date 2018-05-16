@@ -27,7 +27,7 @@ class Cmd_handler
         foreach($cmd['commands'] as $cmd)
         {
             $cmd_str = $cmd['cmd'];
-            echo '<br>Command string :'.$cmd_str;
+            // echo '<br>Command string :'.$cmd_str;
             
             switch($cmd_str)
             {

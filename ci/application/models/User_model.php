@@ -36,8 +36,9 @@ class User_model extends MY_Model
 
         $user_id = $user_id ?? $this->telegram->get_current_user_id();#assume current user id if none provided
         $this->db->select(TBL_USERS.'.id');#Only select id for faster queries
+        $this->db->from(TBL_USERS);
         $this->db->where(TBL_USERS.'.id',$user_id);
-        $user = $this->db->get()->row_object;
+        $user = $this->db->get()->row_object();
 
         //Reset the query builder so we can build new queries 
         $this->db->reset_query();#Note : not sure if get() resets query builder hence this

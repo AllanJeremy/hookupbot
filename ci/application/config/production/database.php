@@ -75,7 +75,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'https://www.allanjeremy.com/',
+	'hostname' => 'bot.allanjeremy.com',
 	'username' => 'allanjer_root',
 	'password' => 'gG?T*pstPF4ib@qh',
 	'database' => 'allanjer_tg_hookup_bot',

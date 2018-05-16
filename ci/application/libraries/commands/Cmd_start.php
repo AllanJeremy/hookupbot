@@ -42,11 +42,14 @@ class Cmd_start
         Functions to handle subcommands will be here
     */
     //Handle the start command
-    protected function start()
+    public function start()
     {
-        $this->ci->load->model('user');
+        $this->ci->load->model('user_model');
         $user = $this->ci->telegram->get_current_user();#Current user
 
+        if(!isset($user))
+        {   return FALSE;   }
+        
         //Set base user data
         $data = array(
             'id' => $user->id,
@@ -59,9 +62,9 @@ class Cmd_start
         
         //The message to send to the user
         $message = lang('start_intro');
-        $set_status = $this->ci->user->set_user($data);
-        
-        $message_status = $this->ci->telegram->send_message(NULL,$message);#TODO: Add buttons
+        $set_status = $this->ci->user_model->set_user_data($data);
+
+        $message_status = $this->ci->telegram->send_message(TEST_CHAT_ID,$message);#TODO: Add buttons
 
         return array(
             'ok'=> (bool)$set_status, #Whether the records were set correctly in the database

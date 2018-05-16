@@ -72,16 +72,20 @@
  * Different environments will require different levels of error reporting.
  * By default development will show errors but testing and live will hide them.
  */
+
+$base_ci_dir = '';#Directory the ci files can be found in
 switch (ENVIRONMENT)
 {
 	case 'development':
+		$base_ci_dir = '../ci';
 		error_reporting(-1);
 		ini_set('display_errors', 1);
 	break;
-
+		
 	case 'testing':
 	case 'production':
-		ini_set('display_errors', 0);
+		$base_ci_dir = '../../../tg_hookup_bot';
+		ini_set('display_errors', 1);#TODO: Return this back to 0 for final production
 		if (version_compare(PHP_VERSION, '5.3', '>='))
 		{
 			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
@@ -106,7 +110,7 @@ switch (ENVIRONMENT)
  * This variable must contain the name of your "system" directory.
  * Set the path if it is not in the same directory as this file.
  */
-	$system_path = '../ci/system';
+	$system_path = $base_ci_dir.'/system';
 
 /*
  *---------------------------------------------------------------
@@ -123,7 +127,7 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
-	$application_folder = '../ci/application';
+	$application_folder = $base_ci_dir.'/application';
 
 /*
  *---------------------------------------------------------------

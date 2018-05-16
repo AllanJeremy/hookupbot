@@ -13,30 +13,30 @@ class MY_Model extends CI_Model
     {
         $select = '';
         if($include_id)
-        { $select .= TBL_USER.'.id,'; }
+        { $select .= TBL_USERS.'.id,'; }
         
-        $select .= TBL_USER.'.is_bot,';
-        $select .= TBL_USER.'.first_name,';
-        $select .= TBL_USER.'.last_name,';
-        $select .= TBL_USER.'.username,';
-        $select .= TBL_USER.'.language_code,';
-        $select .= TBL_USER.'.age,';
-        $select .= TBL_USER.'.gender,';
-        $select .= TBL_USER.'.latitude,';
-        $select .= TBL_USER.'.longitude,';
-        $select .= TBL_USER.'.location_title,';
-        $select .= TBL_USER.'.location_address,';
-        $select .= TBL_USER.'.gender_preference,';
-        $select .= TBL_USER.'.min_age,';
-        $select .= TBL_USER.'.max_age,';
-        $select .= TBL_USER.'.needs_appreciation,';
-        $select .= TBL_USER.'.providing_appreciation,';
-        $select .= TBL_USER.'.details,';
-        $select .= TBL_USER.'.is_banned,';
-        $select .= TBL_USER.'.date_joined';
+        $select .= TBL_USERS.'.is_bot,';
+        $select .= TBL_USERS.'.first_name,';
+        $select .= TBL_USERS.'.last_name,';
+        $select .= TBL_USERS.'.username,';
+        $select .= TBL_USERS.'.language_code,';
+        $select .= TBL_USERS.'.age,';
+        $select .= TBL_USERS.'.gender,';
+        $select .= TBL_USERS.'.latitude,';
+        $select .= TBL_USERS.'.longitude,';
+        $select .= TBL_USERS.'.location_title,';
+        $select .= TBL_USERS.'.location_address,';
+        $select .= TBL_USERS.'.gender_preference,';
+        $select .= TBL_USERS.'.min_age,';
+        $select .= TBL_USERS.'.max_age,';
+        $select .= TBL_USERS.'.needs_appreciation,';
+        $select .= TBL_USERS.'.providing_appreciation,';
+        $select .= TBL_USERS.'.details,';
+        $select .= TBL_USERS.'.is_banned,';
+        $select .= TBL_USERS.'.date_joined';
 
         if($include_phone)
-        {   $select .= TBL_USER.'.phone' ;}
+        {   $select .= TBL_USERS.'.phone' ;}
 
         return $select;
     }
