@@ -34,3 +34,4 @@ $lang['profile_attribute_success'] = 'Successfully [action] the [attribute]';#TO
 
 $lang['profile_attribute_failure'] = 'Failed to [action] the [attribute]';#TODO: Move into a library
 
+$lang['profile_unknown_attribute'] = 'I cannot set the [attribute] attribute as I either do not know of it or I am not allowed to set it.';
