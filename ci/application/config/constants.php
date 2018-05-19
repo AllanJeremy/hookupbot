@@ -94,6 +94,7 @@ define('TBL_PAYMENTS','payments');
 define('TBL_PAYMENT_METHODS','payment_methods');
 define('TBL_USERS','users');
 define('TBL_USER_IMAGES','user_images');
+define('TBL_BOT_TRACE','bot_trace');
 
 /* 
 COMMANDS AVAILABLE FOR THE BOT
