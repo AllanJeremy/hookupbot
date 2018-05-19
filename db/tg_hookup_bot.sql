@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2018 at 11:56 AM
+-- Generation Time: May 19, 2018 at 12:38 PM
 -- Server version: 10.1.25-MariaDB
 -- PHP Version: 7.1.7
 
@@ -21,6 +21,19 @@ SET time_zone = "+00:00";
 --
 -- Database: `tg_hookup_bot`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bot_trace`
+--
+
+CREATE TABLE `bot_trace` (
+  `id` int(10) UNSIGNED NOT NULL COMMENT 'Trace id',
+  `user_id` int(10) UNSIGNED NOT NULL COMMENT 'Id of the user talking to the bot',
+  `last_bot_message_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'Id of the last message the bot sent',
+  `last_bot_message` text COMMENT 'Last message the bot sent'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Stores traces of the bot''s messages with the user';
 
 -- --------------------------------------------------------
 
@@ -109,7 +122,7 @@ CREATE TABLE `users` (
   `language_code` varchar(32) DEFAULT NULL COMMENT 'IETF language tag of the user''s language',
   `age` int(10) UNSIGNED NOT NULL COMMENT 'User age',
   `gender` enum('Male','Female') NOT NULL COMMENT 'User gender',
-  `phone` varchar(15) NOT NULL COMMENT 'Phone number of the user',
+  `phone` varchar(15) DEFAULT NULL COMMENT 'Phone number of the user',
   `latitude` float DEFAULT NULL COMMENT 'User location latitude',
   `longitude` float DEFAULT NULL COMMENT 'User location longitude',
   `location_title` varchar(160) NOT NULL COMMENT 'Name of the venue',
@@ -200,12 +213,7 @@ ALTER TABLE `hookup_requests`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `pay_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Payment id';
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'User id';COMMIT;
+  MODIFY `pay_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Payment id';COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
