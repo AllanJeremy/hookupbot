@@ -8,7 +8,6 @@ class Bot_trace_model extends CI_Model
     function __construct()
     {
         $this->load->database();
-        $this->lang->load('cmd_profile');
         $this->current_user_id = $this->telegram->get_current_user_id();
     }
 

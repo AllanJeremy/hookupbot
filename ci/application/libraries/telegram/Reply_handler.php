@@ -11,6 +11,7 @@ class Reply_handler
     {
         $this->ci = &get_instance();
         $this->ci->load->model('bot_trace_model');
+        $this->lang->load('cmd_profile');
         $this->reply_profile_set = array(
             lang('profile_get_phone'),
             lang('profile_get_age'),
