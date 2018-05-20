@@ -64,7 +64,7 @@ class Cmd_start
         $message = lang('start_intro');
         $set_status = $this->ci->user_model->set_user_data($data);
 
-        $message_status = $this->ci->telegram->debug_message($message);#TODO: Add buttons
+        $message_status = $this->ci->telegram->send_message($message);#TODO: Add buttons
 
         return array(
             'ok'=> (bool)$set_status, #Whether the records were set correctly in the database
