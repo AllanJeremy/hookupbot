@@ -33,16 +33,16 @@ class Cmd_profile
     }
 
     //Handle commands ~ all commands will start running through this function
-    public function handle_command($cmd_obj)
+    public function handle_command($cmd)
     {
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {
-            return $this->ci->telegram->send_message($this->user_chat_id,$cmd['message']);
+            return $this->ci->telegram->send_invalid_cmd_message();
         }
 
         //TODO: Add implementation
-        $this->ci->telegram->send_message($this->user_chat_id,'You used the profile command punk');
+        
     }
 
     /* 

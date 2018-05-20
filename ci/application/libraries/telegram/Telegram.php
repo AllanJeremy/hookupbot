@@ -104,6 +104,7 @@ class Telegram
     //Send invalid command message
     public function send_invalid_cmd_message($chat_id=NULL)
     {
+        $chat_id = $chat_id ?? $this->get_current_user_id();
         return $this->send_message(self::$invalid_cmd_message,$chat_id);
     }
 
