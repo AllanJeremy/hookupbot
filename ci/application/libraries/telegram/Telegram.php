@@ -90,7 +90,7 @@ class Telegram
         $url .= 'chat_id='.$chat_id;
 
         #Format the text so that it is url friendly : otherwise messages with spaces won't send correctly ~ fixed issue #02 on github
-        $text = str_replace(' ','%20',$text);
+        $text = urlencode($text);
         $url .= '&text='.$text;
 
         if(isset($extras) && is_array($extras))
