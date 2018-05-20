@@ -7,9 +7,10 @@ $user_input = $ci->telegram->get_user_update();
 $chat_id = is_object($user_input) ? $user_input->message->chat->id : '';
 $msg_text = is_object($user_input) ? $user_input->message->text : '';
 
+
 //If the message is a reply ~ handle the reply
 $ci->load->library('telegram/reply_handler');
-if($ci->reply_handler->is_reply())
+if($ci->reply_handler->is_reply($msg_text))
 {   $cmd_str = $ci->reply_handler->get_command_string($msg_text);  }
 else //Otherwise just handle the command normally
 {   $cmd_str = $msg_text;  }

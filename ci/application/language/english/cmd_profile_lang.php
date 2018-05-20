@@ -11,7 +11,9 @@ $lang['profile_description'] = "This command allows you to manage your profile. 
 $lang['profile_start'] = "I know you want to hookup. Before you do that, we'll need to setup a few things to help you find the best hookups for you.";#Starting the profile query command
 
 //Getting information from the user
-$lang['profile_get_phone'] = "Your phone number will be your means of contact once you get a hookup. Note: Your phone number will not be shared with anyone without your explicit confirmation.";
+$lang['profile_get_phone'] = "Please enter your phone number.
+
+Your phone number will be your means of contact once you get a hookup. Note: Your phone number will not be shared with anyone without your explicit confirmation.";
 
 $lang['profile_get_age'] = "Please tell me your age (minimum 18 years)";
 
@@ -35,3 +37,5 @@ $lang['profile_attribute_success'] = 'Successfully [action] the [attribute]';#TO
 $lang['profile_attribute_failure'] = 'Failed to [action] the [attribute]';#TODO: Move into a library
 
 $lang['profile_unknown_attribute'] = 'I cannot set the [attribute] attribute as I either do not know of it or I am not allowed to set it.';
+
+$lang['profile_missing_attribute'] = 'Please provide an appropriate attribute to set. Expected /profile set [attribute] [value].';

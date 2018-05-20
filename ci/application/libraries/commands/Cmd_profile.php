@@ -10,8 +10,8 @@ class Cmd_profile
 
     function __construct()
     {
-        $this->user_chat_id = $this->ci->telegram->get_user_update()->message->chat->id;
         $this->ci = &get_instance();
+        $this->user_chat_id = $this->ci->telegram->get_user_update()->message->chat->id;
         $this->ci->load->model('user_model'); #For setting user records in the database
         $this->ci->lang->load('cmd_profile'); #For getting messages to be sent to the user
 
@@ -27,7 +27,7 @@ class Cmd_profile
             'needs_appreciation',
             'providing_appreciation'
         );
-
+        
         //Current user id 
         $this->current_user_id = $this->ci->telegram->get_current_user_id();
     }
@@ -41,7 +41,32 @@ class Cmd_profile
             return $this->ci->telegram->send_invalid_cmd_message();
         }
 
-        //TODO: Add implementation
+        $sub_cmd = &$cmd['sub_cmd'];
+        // Check if the command has a subcommand ~ if not, run the base profile command
+        if (!isset($sub_cmd))
+        {   return $this->profile();    }
+
+        //Otherwise, there is a subcommand ~ switch on it
+        switch($sub_cmd)
+        {
+            case 'start': #Profile start ~ starts the queries for questions to be asked
+                $this->profile_start();
+            break;
+
+            case 'set': #Set profile attribute
+                //Check if the attribute has been provided
+                if($attr = $cmd['attr'])
+                {
+                    $value = $cmd['value'];
+                    $this->profile_set_attr($attr,$value);
+                }
+                else //No attribute has been provided ~ show appropriate message
+                {
+                    $message = lang('profile_missing_attribute');
+                    $this->ci->telegram->send_message($message);
+                }
+            break;
+        }
         
     }
 
@@ -58,13 +83,28 @@ class Cmd_profile
     //Profile start
     public function profile_start($user_id=NULL)
     {
+        $user_id = $user_id ?? $this->current_user_id;
         $message = lang('profile_start');
-        return $this->ci->telegram->send_message($message);
+        $start_msg = $this->ci->telegram->send_message($message);
+
+        $this->ci->load->model('bot_trace_model');
+        $trace = $this->ci->bot_trace_model->get_trace_by_user($user_id);
+
+        $attr_request_msg = $this->get_attribute('phone');
+        $this->ci->telegram->send_message($attr_request_msg);
     }
 
     //Profile get_attribute ~ request a user for a certain attribute
     public function get_attribute($attr,$user_id=NULL)
     {
+        $this->ci->load->model('bot_trace_model');
+        
+        $trace_data = array(
+            'last_bot_message_id' => '',
+            'last_bot_message' => ''
+        );
+
+        $user_id = $user_id ?? $this->current_user_id;
         $message = NULL;
         //Determine which attribute message to show
         switch($attr)
@@ -108,7 +148,17 @@ class Cmd_profile
             default:
                 $message = lang('profile_unknown_attribute');
         }
-        return $this->ci->telegram->send_message($message);
+        $bot_message = $this->ci->telegram->send_message($message);#The message sent to the bot
+        
+        $trace_data['last_bot_message_id'] = $bot_message->message_id;
+        $trace_data['last_bot_message'] = $message;
+
+        $set_trace_status = $this->ci->bot_trace_model->set_trace($trace_data,$user_id);
+
+        return array(
+            'ok' => (bool)$set_trace_status,
+            'message' => $bot_message
+        );
     }
 
     //Profile set_attribute
@@ -119,7 +169,7 @@ class Cmd_profile
         //If the value to set the attribute was not provided or was empty or is not an editable attribute ~ show error
         if (!isset($value) || empty($value) || !in_array($attr,$this->_editable_attributes))
         {  
-            $message = 'Missing value for '.$attr;#TODO: Change to use lang('profile_attribute_failure') or equivalent. Also : Add parser for this ~ consider localization while doing so
+            $message = 'Sorry I cannot set the value for '.$attr.'. Invalid attribute or restricted access';#TODO: Change to use lang('profile_attribute_failure') or equivalent. Also : Add parser for this ~ consider localization while doing so
             return $this->ci->telegram->send_message($message);
         }
         

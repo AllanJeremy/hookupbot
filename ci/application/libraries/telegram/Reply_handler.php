@@ -11,8 +11,8 @@ class Reply_handler
     {
         $this->ci = &get_instance();
         $this->ci->load->model('bot_trace_model');
-        $this->lang->load('cmd_profile');
-        $this->reply_profile_set = array(
+        $this->ci->lang->load('cmd_profile');
+        $this->reply_profile_set_messages = array(
             lang('profile_get_phone'),
             lang('profile_get_age'),
             lang('profile_get_gender'),
@@ -27,10 +27,10 @@ class Reply_handler
 
 
     //Returns true if the response should be processed as a reply to a query by the bot
-    public function is_reply($user_id=NULL)
+    public function is_reply($reply_text,$user_id=NULL)
     {
         return (
-            $this->get_profile_set_reply()['ok']//TODO: use  || for additional checks
+            $this->get_profile_set_reply($reply_text)['ok']//TODO: use  || for additional checks
         );
     }
     
@@ -44,7 +44,7 @@ class Reply_handler
     public function get_profile_set_reply($reply_text,$user_id=NULL)
     {
         $trace = $this->ci->bot_trace_model->get_trace_by_user($user_id);
-        $is_ok = in_array($trace->last_bot_message,$this->reply_profile_set);
+        $is_ok = in_array($trace->last_bot_message,$this->reply_profile_set_messages);
 
         $response = array(
             'ok' => $is_ok
