@@ -10,6 +10,7 @@ function tg_parse_msg(string $message,array $replacements)
     //Otherwise, loop through the replacements and replace them in the message provided
     foreach ($replacements as $key => $value) 
     {
+        $value = (isset($value) && !empty($value)) ? $value : '[Not set]';
         // replace the $key with the value
         $replace_str = '['.(string)$key.']';;# The string to be replaced
         $message = str_replace($replace_str,$value,$message);
