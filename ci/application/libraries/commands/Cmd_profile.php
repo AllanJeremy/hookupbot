@@ -12,8 +12,10 @@ class Cmd_profile
     {
         $this->ci = &get_instance();
         $this->user_chat_id = $this->ci->telegram->get_user_update()->message->chat->id;
+        
         $this->ci->load->model('user_model'); #For setting user records in the database
         $this->ci->lang->load('cmd_profile'); #For getting messages to be sent to the user
+        $this->ci->load->helper('telegram/message_parser');# Load the message parser helper
 
         //Set the list of attributes that can be modified
         $this->_editable_attributes = array(
@@ -53,12 +55,48 @@ class Cmd_profile
                 $this->profile_start();
             break;
 
+            case 'info': #Profile info ~ starts the queries for questions to be asked
+                
+                if ($attr = $cmd['attr']) # If we're requesting an attribute's info
+                {   $this->profile_attr_info($attr);    }
+                else # Profile info
+                {   $this->profile_info();  }
+                
+            break;
+            
+            case 'get': #Get profile attribute
+                //Check if the attribute has been provided
+                if($attr = $cmd['attr'])
+                {
+                    $value = $cmd['value'];
+                    $this->get_attribute($attr);
+                }
+                else //No attribute has been provided ~ show appropriate message
+                {
+                    $message = lang('profile_missing_attribute');
+                    $this->ci->telegram->send_message($message);
+                }
+            break;
+
             case 'set': #Set profile attribute
                 //Check if the attribute has been provided
                 if($attr = $cmd['attr'])
                 {
                     $value = $cmd['value'];
-                    $this->profile_set_attr($attr,$value);
+                    $this->set_attribute($attr,$value);
+                }
+                else //No attribute has been provided ~ show appropriate message
+                {
+                    $message = lang('profile_missing_attribute');
+                    $this->ci->telegram->send_message($message);
+                }
+            break;
+
+            case 'remove':
+                //Check if the attribute has been provided
+                if($attr = $cmd['attr'])
+                {
+                    $this->remove_attribute($attr);
                 }
                 else //No attribute has been provided ~ show appropriate message
                 {
@@ -162,14 +200,17 @@ class Cmd_profile
     }
 
     //Profile set_attribute
-    public function profile_set_attr($attr,$value,$user_id=NULL)
+    public function set_attribute($attr,$value,$user_id=NULL)
     {
         $user_id = $user_id ?? $this->current_user_id;
         $message = NULL;#Message we will show to the user
         //If the value to set the attribute was not provided or was empty or is not an editable attribute ~ show error
         if (!isset($value) || empty($value) || !in_array($attr,$this->_editable_attributes))
         {  
-            $message = 'Sorry I cannot set the value for '.$attr.'. Invalid attribute or restricted access';#TODO: Change to use lang('profile_attribute_failure') or equivalent. Also : Add parser for this ~ consider localization while doing so
+            $message = tg_parse_msg(lang('profile_attribute_failure'),array(
+                'action' => 'set',#TODO: Use lang file for localization of this
+                'attribute' => $attr
+            ));
             return $this->ci->telegram->send_message($message);
         }
         
@@ -182,10 +223,20 @@ class Cmd_profile
         
         //If the update in the db was successful ~ show success message
         if($update_status)
-        {   $message = lang('profile_attribute_success');   }
+        {   
+            $message = tg_parse_msg(lang('profile_attribute_success'),array(
+                'action' => 'set',#TODO: Use lang file for localization of this
+                'attribute' => $attr
+            ));
+        }
 
         else //Otherwise show failure message
-        {   $message = lang('profile_attribute_failure');   }
+        {  
+             $message = tg_parse_msg(lang('profile_attribute_failure'),array(
+                 'action' => 'set', #TODO: Use lang file for localization of this
+                 'attribute' => $attr
+             ));   
+        }
 
         //Return status and message
         return array(
@@ -195,22 +246,41 @@ class Cmd_profile
     }
     
     //Profile remove attribute
-    public function profile_remove_attr($attr,$user_id=NULL)
+    public function remove_attribute($attr,$user_id=NULL)
     {
         $user_id = $user_id ?? $this->current_user_id;
         $message = NULL;
         if(!in_array($attr,$this->_editable_attributes))
         {
-            $message = lang('profile_unknown_attribute');
+            $message = tg_parse_msg(lang('profile_unknown_attribute'),array(
+                'attribute' => $attr
+            ));
             return $this->ci->telegram->send_message($message);
         }
 
         $remove_status = $this->ci->user_model->remove_user_data($user_id,array($attr));
+        
+        //If it was successfully removed
+        if ($remove_status)
+        {
+            $message = tg_parse_msg(lang('profile_attribute_success'),array(
+                'action' => 'removed',#TODO: Use lang file for localization of this
+                'attribute' => $attr
+            ));
+        }
+        else
+        {
+            $message = tg_parse_msg(lang('profile_attribute_failure'),array(
+                'action' => 'remove',#TODO: Use lang file for localization of this
+                'attribute' => $attr
+            ));
+        }
        
+        $sent_message = $this->ci->telegram->send_message($message);#TODO: Add reply keyboards
         //Return status and message
         return array(
             'ok' => (bool)$remove_status,
-            'message' => $this->ci->telegram->send_message($message)#TODO: Add reply keyboards
+            'message' => $sent_message 
         ); 
 
     }

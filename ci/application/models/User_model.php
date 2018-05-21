@@ -75,28 +75,28 @@ class User_model extends MY_Model
     //Remove user data 
     public function remove_user_data($user_id,$columns=NULL)
     {
-        $this->db->where(TBL_USERS.'.id',$user_id);
-
+        $remove_status = TRUE;
         //If there are extra columns provided, removes specific data(columns) from user
-        if(is_array($data))
+        if(is_array($columns))
         {
+            $this->db->where(TBL_USERS.'.id',$user_id);
             foreach($columns as $col)
             {
                 $this->db->set($col,NULL);
-                $this->db->update(TBL_USERS);
+                $remove_status &= $this->db->update(TBL_USERS);
                 $this->db->where($col,'*');
             }
         }
         else
-        {
-            return $this->db->delete(TBL_USERS);
-        }
+        {   $remove_status = FALSE;   }
+
+        return $remove_status;
     }
 
     //Remove user image
     public function remove_user_image($image_id)
     {
-        $this->db->where(TBL_USER_IMAGS.'.file_id',$image_id);
+        $this->db->where(TBL_USER_IMAGES.'.file_id',$image_id);
         return $this->db->delete(TBL_USER_IMAGES);
     }
 }
