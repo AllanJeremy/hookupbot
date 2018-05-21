@@ -12,7 +12,8 @@ class User_model extends MY_Model
     //User selects & joins
     private function _user_joins($include_phone=FALSE)
     {
-        $this->db->select($this->_select_user_query($include_phone));
+        $select = $this->_select_user_query($include_phone);
+        $this->db->select($select);
         $this->db->from(TBL_USERS);
     }
 
@@ -25,6 +26,22 @@ class User_model extends MY_Model
         $this->db->select($select);
         $this->db->from(TBL_USER_IMAGES);
         $this->db->join(TBL_USERS,TBL_USER_IMAGES.'.user_id = '.TBL_USERS.'.id');
+    }
+
+    //Get user data ~ returns false if the user doesn't exist
+    public function get_user_data($user_id,$include_phone=FALSE)
+    {
+        $this->_user_joins($include_phone);
+        $this->db->where(TBL_USERS.'.id',$user_id);
+        return $this->db->get()->row_object();
+    }
+
+    //Get user images
+    public function get_user_images($user_id,$include_phone=FALSE)
+    {
+        $this->_user_images_joins($include_phone);
+        $this->db->where(TBL_USER_IMAGES.'.user_id',$user_id);
+        return $this->db->get();
     }
 
     //Update/insert user data
@@ -55,21 +72,6 @@ class User_model extends MY_Model
         }
         
         return $op_result;
-    }
-
-    //Get user images
-    public function get_user_images($user_id,$include_phone=FALSE)
-    {
-        $this->_user_images_joins($include_phone);
-        $this->db->where(TBL_USER_IMAGES.'.user_id',$user_id);
-        return $this->db->get();
-    }
-
-    //Get user data ~ returns false if the user doesn't exist
-    public function get_user_data($user_id,$include_phone=FALSE)
-    {
-        $this->_user_joins($include_phone);
-        return $this->db->get();
     }
 
     //Remove user data 

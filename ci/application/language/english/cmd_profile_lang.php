@@ -32,10 +32,53 @@ $lang['profile_get_needs_appreciation'] = "Do you need to be appreciated/paid by
 $lang['profile_get_providing_appreciation'] = "Would you be willing to pay/appreciate your hookup partner?";
 
 //Profile set attribute success or failure message
-$lang['profile_attribute_success'] = 'Successfully [action] the [attribute]';
+$lang['profile_attribute_success'] = "Successfully [action] the [attribute]";
 
-$lang['profile_attribute_failure'] = 'Failed to [action] the [attribute]. Invalid attribute or restricted access';
+$lang['profile_attribute_failure'] = "Failed to [action] the [attribute]. Invalid attribute or restricted access";
 
-$lang['profile_unknown_attribute'] = 'I cannot set the [attribute] attribute as I either do not know of it or I am not allowed to set it.';
+$lang['profile_unknown_attribute'] = "I cannot set the [attribute] attribute as I either do not know of it or I am not allowed to set it.";
 
-$lang['profile_missing_attribute'] = 'Please provide an appropriate attribute to set. Expected /profile set [attribute] [value].';
+$lang['profile_missing_attribute'] = "Please provide an appropriate attribute to set. Expected /profile set [attribute] [value].";
+
+//Profile attribute info
+$lang['profile_info_phone'] = "Your phone number is [phone].
+This is the number you will use as your account number when making payments. It is also the number that will be sent to a hookup when you approve of their request.";
+
+$lang['profile_info_age'] = "Your age : [age]
+Your age determines the kind of people that can find you in the hookup pool.
+It is also a confirmation that you are of legal age to use this service.";
+
+$lang['profile_info_gender'] = "Your gender : [gender]
+Your gender is used to determine your matches in the hookup pool.";
+
+$lang['profile_info_gender_preference'] = "Your gender preference: [gender_preference]
+Your gender preference is used to determine your matches in the hookup pool.";
+
+$lang['profile_info_min_age'] = "Your minimum age: [min_age]
+This is the minimum preferred age for a hookup partner.";
+
+$lang['profile_info_max_age'] = "Your maximum age: [max_age]
+This is the maximum preferred age for a hookup partner.";
+
+$lang['profile_info_location'] = "Your location : [location]";
+
+$lang['profile_info_needs_appreciation'] = "Would like appreciation: [needs_appreciation]
+Whether or not you would like to be appreciated/paid by your hookup partner for a hookup.
+May determine matches in hookup pool.";
+
+$lang['profile_info_providing_appreciation'] = "Providing appreciation: [providing_appreciation]
+Whether or not you are willing to appreciate/pay your hookup partner for the hookup.
+May determine matches in hookup pool.";
+
+$lang['profile_info'] = "Profile info";
+$lang['profile_info'] .= "\n".$lang['profile_info_phone'];
+$lang['profile_info'] .= "\n\n".$lang['profile_info_age'];
+$lang['profile_info'] .= "\n\n".$lang['profile_info_gender'];
+$lang['profile_info'] .= "\n\n".$lang['profile_info_gender_preference'];
+$lang['profile_info'] .= "\n\n".$lang['profile_info_min_age'];
+$lang['profile_info'] .= "\n\n".$lang['profile_info_max_age'];
+$lang['profile_info'] .= "\n\n".$lang['profile_info_location'];
+$lang['profile_info'] .= "\n\n".$lang['profile_info_needs_appreciation'];
+$lang['profile_info'] .= "\n\n".$lang['profile_info_providing_appreciation'];
+
+$lang['profile_info_missing'] = "Sorry, I could not retrieve that information.";

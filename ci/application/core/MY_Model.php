@@ -36,7 +36,7 @@ class MY_Model extends CI_Model
         $select .= TBL_USERS.'.date_joined';
 
         if($include_phone)
-        {   $select .= TBL_USERS.'.phone' ;}
+        {   $select .= ','.TBL_USERS.'.phone' ;}
 
         return $select;
     }

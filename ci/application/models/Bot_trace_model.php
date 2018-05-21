@@ -1,13 +1,13 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 //This class handles payment related operations
-class Bot_trace_model extends CI_Model
+class Bot_trace_model extends MY_Model
 {
     protected $current_user_id;#TODO: Consider adding to MY_Model
     //Constructor
     function __construct()
     {
-        $this->load->database();
+        parent::__construct();
         $this->current_user_id = $this->telegram->get_current_user_id();
     }
 
