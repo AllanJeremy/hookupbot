@@ -85,6 +85,12 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 /* 
+GENERAL CUSTOM CONSTANTS
+*/
+define('LOWER_ID_BOUND',100000);
+define('UPPER_ID_BOUND',100000000);
+
+/* 
 TABLES BEING USED
 */
 define('TBL_HOOKUPS','hookups');

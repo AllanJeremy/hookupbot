@@ -56,7 +56,29 @@ class Hookup_model extends MY_Model
     // Add to hookup pool
     public function add_to_pool($data)
     {
-        return is_array($data) ? $this->db->insert(TBL_POOL,$data) : FALSE;
+        //If the data provided is not an array ~ return false
+        if(!is_array($data))
+        {   return FALSE;   }
+
+        // Generate a random id
+        $id = mt_rand(LOWER_ID_BOUND,UPPER_ID_BOUND); 
+        
+        #TODO: Consider checking if we have run out of ids (We have 99 million possible ids ~ should be enough for a while. Means 99 million hookup attempts)
+        
+        $this->db->select(TBL_POOL.'.id');
+        $this->db->where(TBL_POOL.'.id',$id);
+        $pool_entry = $this->db->get(TBL_POOL)->row_object();
+
+        //If a pool entry with that id exists ~ try again
+        if(isset($pool_entry))
+        {   
+            $this->add_to_pool($data);#Recursively try again
+        }
+        else //The pool entry does not exist ~ the id is unique
+        {
+            $data['id'] = $id;
+            return $this->db->insert(TBL_POOL,$data);
+        }
     }
 
     // Remove from hookup pool
