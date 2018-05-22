@@ -35,42 +35,55 @@ class Cmd_handler
                     $this->ci->load->library('commands/cmd_start');
                     $handled = $this->ci->cmd_start->handle_command($cmd);
                 break;
+                
                 case CMD_SETTINGS:
                     $this->ci->load->library('commands/cmd_settings');
                     $handled = $this->ci->cmd_settings->handle_command($cmd);
                 break;
+                
                 case CMD_HELP:
                     $this->ci->load->library('commands/cmd_help');
                     $handled = $this->ci->cmd_help->handle_command($cmd);
                 break;
+                
                 case CMD_PAYMENT:
                     $this->ci->load->library('commands/cmd_payment');
                     $handled = $this->ci->cmd_payment->handle_command($cmd);
                 break;
-                case CMD_PROFILE:
+                
+                case CMD_PROFILE:#Profile 
                     $this->ci->load->library('commands/cmd_profile');
                     $handled = $this->ci->cmd_profile->handle_command($cmd);
                 break;
-                case CMD_FIND:
+
+                case CMD_FIND:#Find matching members in hookup pool
+                case CMD_HOOKUP:
                     $this->ci->load->library('commands/cmd_find');
-                    $this->ci->telegram->debug_message('[In switch] '.$test_msg.(class_exists('Cmd_find')));
                     $handled = $this->ci->cmd_find->handle_command($cmd);
                 break;
-                case CMD_ADD:
-                    $this->ci->load->library('commands/cmd_add');
-                    $handled = $this->ci->cmd_add->handle_command($cmd);
+                
+                case CMD_ADD:#Add self to hookup pool
+                case CMD_HOOKUP:
+                    $this->ci->load->library('commands/cmd_hookup');
+                    $handled = $this->ci->cmd_hookup->handle_command($cmd);
                 break;
-                case CMD_SELECT:
-                    $this->ci->load->library('commands/cmd_select');
-                    $handled = $this->ci->cmd_select->handle_command($cmd);
+                
+                case CMD_SELECT:#Select a hookup from hookup pool
+                case CMD_HOOKUP:
+                    $this->ci->load->library('commands/cmd_hookup');
+                    $handled = $this->ci->cmd_hookup->handle_command($cmd);
                 break;
-                case CMD_VIEW:
-                    $this->ci->load->library('commands/cmd_view');
-                    $handled = $this->ci->cmd_view->handle_command($cmd);
+                
+                case CMD_VIEW:#View single hookup profile from hookup pool
+                case CMD_HOOKUP:
+                    $this->ci->load->library('commands/cmd_hookup');
+                    $handled = $this->ci->cmd_hookup->handle_command($cmd);
                 break;
-                case CMD_REMOVE:
-                    $this->ci->load->library('commands/cmd_view');
-                    $handled = $this->ci->cmd_view->handle_command($cmd);
+                
+                case CMD_REMOVE:#Remove self from hookup pool
+                case CMD_HOOKUP:
+                    $this->ci->load->library('commands/cmd_hookup');
+                    $handled = $this->ci->cmd_hookup->handle_command($cmd);
                 break;
                 // default: 
                 //     $this->ci->telegram->debug_message(self::$unknown_cmd_msg);

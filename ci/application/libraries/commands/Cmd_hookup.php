@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-//This class handles view commands
-class Cmd_view
+//This class handles add commands
+class Cmd_add
 {
     public $ci;
     function __construct()
@@ -15,11 +15,11 @@ class Cmd_view
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {
-            return $this->ci->telegram->debug_message($cmd['message']);
+            return $this->ci->telegram->send_message($cmd['message'],TEST_CHAT_ID);
         }
 
         //TODO: Add implementation
-        $this->ci->telegram->debug_message('You used the view command punk');
+        $this->ci->telegram->send_message('You used the hookup command punk',TEST_CHAT_ID);
     }
 
     /* 

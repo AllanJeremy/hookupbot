@@ -107,6 +107,7 @@ COMMANDS AVAILABLE FOR THE BOT
 */
 define('CMD_PROFILE','/profile');#Profile command
 define('CMD_FIND','/find');#Find hookups command
+define('CMD_HOOKUP','/hookup');#Hookup command
 define('CMD_ADD','/add');#Add to hookup pool command
 define('CMD_SELECT','/select');#Select a hookup command
 define('CMD_VIEW','/view');#View single profile command
