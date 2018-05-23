@@ -5,15 +5,20 @@ class Cmd_add
 {
     public $ci;
     public $current_user_id;
+    public $current_user;
+
     function __construct()
     {
         $this->ci = &get_instance();
         
         $this->ci->lang->load('cmd_hookup');# Load the hookup language file
         $this->ci->load->helper('telegram/message_parser');# Load the message parser helper
-        $this->ci->load->library('hookups/hookup_handler');# Load appropriate handler for hookups ~ this talks to the model
+        $this->ci->load->model('hookup_model');# Load appropriate handler for hookups ~ this talks to the model
+        $this->ci->load->model('user_model');# Load appropriate handler for hookups ~ this talks to the model
 
         $this->current_user_id = $this->ci->telegram->get_current_user_id();
+
+        $this->current_user = $this->ci->user_model->get_user_data($this->current_user_id);
     }
 
     //Handle commands ~ all commands will start running through this function
@@ -113,29 +118,99 @@ class Cmd_add
     //Add self to hookup pool to hookup pool
     public function add_to_pool()
     {
-        //TODO: Add implementation
+        $data = array(
+            'hookup_user_id' => $this->current_user_id
+        );
+        $add_status = $this->ci->hookup_model->add_to_pool($data);
+
+        $message = '';
+        //If we successfully to add the user to the hookup pool
+        if ($add_status)
+        {   $message = lang('pool_add_success');    }
+        else
+        {   $message = lang('pool_add_failure');    }
+
+        return $this->ci->telegram->send_message($message);
     }
 
     //Remove self from hookup pool
-    public function remove_from_pool()
+    public function remove_from_pool($pool_id)
     {
-        //TODO: Add implementation
+        $remove_status = $this->ci->hookup_model->remove_from_pool($this->current_user_id);
+
+        $message = '';
+        //If we successfully to remove the user from the hookup pool
+        if ($remove_status)
+        {   $message = lang('pool_remove_success');    }
+        else
+        {   $message = lang('pool_remove_failure');    }
+
+        return $this->ci->telegram->send_message($message);
     }
 
     //Find hookups in hookup pool
     public function find_hookups()
     {
-        //TODO: Add implementation
+        //TODO: Add implementation ~ once we have buttons
     }
 
     public function view_hookup($pool_id)
     {
-        //TODO: Add implementation
+        $hookup = $this->ci->hookup_model->select_user_from_pool($pool_id)->row_object();
+        
+        $message = '';
+        if(isset($hookup))
+        {
+            $needs_appreciation = $hookup->needs_appreciation ? "\nNeeds appreciation" : '';
+            $providing_appreciation = $hookup->providing_appreciation ? "\nProviding appreciation" : '';
+            $appreciation = $needs_appreciation.$providing_appreciation ;
+            
+            $message = tg_parse_msg(lang('pool_result_details'),array(
+                'age' => $hookup->age,
+                'gender' => $hookup->gender,
+                'min_age' => $hookup->min_age,
+                'max_age' => $hookup->max_age,
+                'gender_preference' => $hookup->gender_preference,
+                'location' => $hookup->location_title,
+                'appreciation' => $appreciation,
+                'details' => $hookup->details
+            ));
+        }
+        else
+        {
+            $message = tg_parse_msg(lang('record_failed_action'),array(
+                'action'=>'view',
+                'record'=>'the user'
+            ));
+        }
+
+        return $this->ci->telegram->send_message($message);
     }
 
     public function select_hookup($pool_id)
     {
-        //TODO: Add implementation
+        $hookup = $this->ci->hookup_model->select_user_from_pool($pool_id)->row_object();
+
+        $status_message = '';
+        //If a hookup was found ~ send the hookup a message
+        if(isset($hookup))
+        {
+            $status_message = lang('hookup_select_success');
+            $message = tg_parse_msg(lang('pool_select_message'),array(
+                'age'=>$hookup->age,
+                'gender'=>$hookup->gender,
+                'location'=>$hookup->location
+            ));
+
+            //Send a message to the requested hookup partner
+            $this->ci->telegram->send_message($message,$hookup->hookup_user_id);#TODO:Add accept and decline buttons
+        }
+        else
+        {
+            $status_message = lang('hookup_select_failure');
+        }
+
+        return $this->ci->telegram->send_message($status_message);
     }
 
 }

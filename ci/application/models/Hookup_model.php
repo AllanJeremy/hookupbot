@@ -43,13 +43,14 @@ class Hookup_model extends MY_Model
     }
 
     // Pool joins
-    private function _pool_joins()
+    private function _pool_joins($is_taken=FALSE)
     {
         $select = TBL_POOL.'.*,';
         $select .= $this->_select_user_query();
 
         $this->db->select($select);
         $this->db->from(TBL_POOL);
+        $this->db->where(TBL_POOL.'.is_taken',(bool)$is_taken);
         $this->db->join(TBL_USERS,TBL_POOL.'.hookup_user_id = '.TBL_USERS.'.id');
     }
     
@@ -85,7 +86,7 @@ class Hookup_model extends MY_Model
     public function remove_from_pool($user_id) #if user id is not set, get the current user
     {
         $this->db->where(TBL_POOL.'.hookup_user_id',$user_id);
-        return isset($user_id) ? $this->db->delete(TBL_POOL) : FALSE;
+        return $this->db->delete(TBL_POOL);
     }
 
     // Select user from hookup pool
@@ -93,7 +94,7 @@ class Hookup_model extends MY_Model
     {
         $this->db->where(TBL_POOL.'.id',$pool_id);
         $this->_pool_joins();
-        return isset($pool_id) ? $this->db->get() : FALSE;
+        return $this->db->get();
     }
 
     

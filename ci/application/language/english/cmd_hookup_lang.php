@@ -24,6 +24,10 @@ $lang['pool_remove_failure'] = 'Failed to remove you from the hookup pool';
 
 $lang['missing_attr'] = 'Missing [attr_name]. Expected [command] [[attr_name]]';#TODO: Move this to general lang file
 
+$lang['record_failed_action'] = 'Could not [action] [record]';#TODO: Move this to general lang file
+
 $lang['pool_find_result'] = "[age]yr [gender] from [location]\nAppreciation:[appreciation]";
 
-$lang['pool_result_detail'] = "Age: [age]\nGender : [gender]\nMin preferred age:[min_age]\nMax preferred age:[max_age]\nPreferred gender: [gender_preference] \nLocation: [location]\nAppreciation:[appreciation]\nDetails: [details]";
+$lang['pool_result_details'] = "Age: [age]\nGender : [gender]\nMin preferred age:[min_age]\nMax preferred age:[max_age]\nPreferred gender: [gender_preference] \nLocation: [location]\nAppreciation:[appreciation]\nDetails: [details]";
+
+$lang['pool_select_message'] = 'A [age]yr old [gender] from [location] matched with you and would like to hookup with you';
