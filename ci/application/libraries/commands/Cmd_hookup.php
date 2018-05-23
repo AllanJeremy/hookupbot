@@ -52,6 +52,7 @@ class Cmd_add
             break;
         }
 
+        $return_message = NULL;
         //Switch on sub commands 
         switch($cmd['sub_cmd'])
         {
@@ -94,6 +95,38 @@ class Cmd_add
                     $message = tg_parse_msg(lang('missing_attr'),array(
                         'attr_name'=>'pool_id',
                         'command'=>'/select'
+                    ));
+                    $return_message = $this->ci->telegram->send_message($message);
+                }
+            break;
+            //TODO: Consider DRYing this
+            case 'accept': #Accepting a hookup request
+                //If the request id is set
+                if($request_id = $cmd['attr'])
+                {
+                    $return_message = $this->accept_hookup_request($request_id);
+                }
+                else
+                {
+                    $message = tg_parse_msg(lang('missing_attr'),array(
+                        'attr_name'=>'request_id',
+                        'command'=>'/hookup accept'
+                    ));
+                    $return_message = $this->ci->telegram->send_message($message);
+                }
+            break;
+            //TODO: Consider DRYing this
+            case 'decline': #Declining a hookup request
+                //If the request id is set
+                if($request_id = $cmd['attr'])
+                {
+                    $return_message = $this->decline_hookup_request($request_id);
+                }
+                else
+                {
+                    $message = tg_parse_msg(lang('missing_attr'),array(
+                        'attr_name'=>'request_id',
+                        'command'=>'/hookup decline'
                     ));
                     $return_message = $this->ci->telegram->send_message($message);
                 }
@@ -213,4 +246,55 @@ class Cmd_add
         return $this->ci->telegram->send_message($status_message);
     }
 
+    //Handle hookup request acceptance
+    private function _handle_hookup_request_accept($request_id,$is_accepted)
+    {
+        //Get the requester
+        $requester = $this->ci->hookup_model->get_hookup_request($request_id)->row_object();
+        $status = FALSE;
+        $message = '';
+
+        //If is_accepted is true, run accepted hookup request logic
+        if($is_accepted)
+        {   
+            $status = $this->hookup_model->accept_hookup_request($request_id);
+        }
+        else
+        {
+            $status = $this->hookup_model->decline_hookup_request($request_id);
+        }
+
+        //Name of the message in the lang file that will be displayed ~ declined or accepted message
+        $decision_message = $is_accepted ? 'request_accepted_message' : 'request_declined_message';
+
+        //If the hookup request was successful
+        if($status && isset($requester))
+        {
+            $message = tg_parse_msg(lang($decision_message),array(
+                'age'=> $requester->age,
+                'gender'=> $requester->gender,
+                'location'=> $requester->location
+            ));
+        }
+        else //If the hookup request was unsuccessful ~ or we couldn't retrieve the requester
+        {
+            $message = tg_parse_msg(lang('error_generic'),array(
+                'action'=> 'accept the hookup request'#TODO: Move this to lang file for localization
+            ));
+        }
+        // Return a message
+        return $this->ci->telegram->send_message($message,$requester->hookup_user_id);
+    }
+
+    //Accept hookup request
+    public function accept_hookup_request($request_id)
+    {
+        return $this->_handle_hookup_request_accept($request_id,TRUE);
+    }
+
+    //Decline hookup request
+    public function decline_hookup_request($request_id)
+    {
+        return $this->_handle_hookup_request_accept($request_id,TRUE);
+    }
 }

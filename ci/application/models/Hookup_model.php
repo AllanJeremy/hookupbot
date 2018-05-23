@@ -39,7 +39,7 @@ class Hookup_model extends MY_Model
         
         $this->db->select($select);
         $this->db->from(TBL_HOOKUP_REQUESTS);
-        $this->db->join(TBL_POOL,TBL_HOOKUP_REQUESTS.'.hookup_id = '.TBL_POOL.'.hookup_user_id');
+        $this->db->join(TBL_POOL,TBL_HOOKUP_REQUESTS.'.hookup_id = '.TBL_POOL.'.hookup_user_id');#TODO: Check this ~ possibly bug
     }
 
     // Pool joins
@@ -184,19 +184,18 @@ class Hookup_model extends MY_Model
     }
 
     // View hookup request
-    public function view_hookup_request($request_id)
+    public function get_hookup_request($request_id)
     {
         $this->_hookup_request_joins();
         $this->db->where(TBL_HOOKUP_REQUESTS.'.id',$request_id);
-        return isset($request_id) ? $this->db->get() : FALSE;
+        return $this->db->get();
     }
 
     //Returns true if the hookup request exists and false if it doesn't
     private function _hookup_request_exists($request_id)
     {
-        $request = $this->view_hookup_request($request_id); #Get the hookup request
-        $request_exists = ($request != FALSE) ? (count($request->result_array())>0) : $request;
-        return $request_exists;
+        $request = $this->get_hookup_request($request_id)->row_object(); #Get the hookup request
+        return isset($request);
     }
     // Confirm hookup request ~ once payment has been made. Add to hookups table
     public function confirm_hookup_request($request_id)
