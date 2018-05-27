@@ -32,5 +32,4 @@ class Bot extends CI_Controller{
         $this->load->view('test');
     }
 
-
 }

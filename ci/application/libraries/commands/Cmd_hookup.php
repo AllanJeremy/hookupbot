@@ -12,7 +12,6 @@ class Cmd_add
         $this->ci = &get_instance();
         
         $this->ci->lang->load('cmd_hookup');# Load the hookup language file
-        $this->ci->load->helper('telegram/message_parser');# Load the message parser helper
         $this->ci->load->model('hookup_model');# Load appropriate handler for hookups ~ this talks to the model
         $this->ci->load->model('user_model');# Load appropriate handler for hookups ~ this talks to the model
 

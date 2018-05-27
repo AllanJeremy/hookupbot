@@ -15,7 +15,6 @@ class Cmd_profile
         
         $this->ci->load->model('user_model'); #For setting user records in the database
         $this->ci->lang->load('cmd_profile'); #For getting messages to be sent to the user
-        $this->ci->load->helper('telegram/message_parser');# Load the message parser helper
 
         //Set the list of attributes that can be modified
         $this->_editable_attributes = array(

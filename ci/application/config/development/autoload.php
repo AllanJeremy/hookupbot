@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('language','telegram/debug'); #TODO: Disable debug autoload in production
+$autoload['helper'] = array('language','telegram/telegram','telegram/keyboard');
 
 /*
 | -------------------------------------------------------------------

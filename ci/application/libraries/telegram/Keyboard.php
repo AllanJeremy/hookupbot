@@ -2,13 +2,6 @@
 
 class Keyboard
 {
-    public $ci;
-
-    //Constructor
-    function __construct()
-    {
-        $this->ci = &get_instance();
-    }
     /* 
         HELPER FUNCTIONS
     */
