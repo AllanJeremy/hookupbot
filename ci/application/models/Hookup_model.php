@@ -143,7 +143,7 @@ class Hookup_model extends MY_Model
 
         //Only get users that have not been taken
         $this->db->where(TBL_POOL.'.is_taken !=',TRUE);
-        $this->db->get();
+        return $this->db->get();
     }
 
     // Check if a given user is in the hookup pool ~ return the pool_id if user was found and false if not

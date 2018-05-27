@@ -183,7 +183,57 @@ class Cmd_add
     //Find hookups in hookup pool
     public function find_hookups()
     {
-        //TODO: Add implementation ~ once we have buttons
+        $hookups_found = $this->hookup_model->get_pool_matches()->result_object;
+
+        //If no hookups were found ~ send no hookups found message
+        if(!isset($hookups_found))
+        {
+            return array(
+                'ok'=>FALSE,
+                'message'=>tg_send_message(lang('pool_no_matches_found'))
+            );
+        }
+
+        $column1 = $column2 = array();
+        
+        $count = 0;
+        //Hookups found ~ loop through them and display appropriate buttons
+        foreach($hookups_found as $hookup)
+        {
+            $count++;
+            
+            //[age]yr [gender] from [location]\nAppreciation:[appreciation]
+            $button_text = tg_parse_msg(lang('pool_find_result'),array(
+                'age'=> $hookup->age,
+                'gender'=> $hookup->gender,
+                'location'=> $hookup->location_title ?? 'Unknown location',
+            ));
+            $button_command = '/hookup view '.$hookup->id;
+            $button = tg_inline_button($button_text,array(
+                'callback_query'=>$button_command
+            ));
+
+            //If we aren't in an even number ~ add to column 1
+            if($count%2 !== 0)
+            {
+                array_push($button,$column1);
+            }
+            else //Otherwise add to column 2
+            {
+                array_push($button,$column2);
+            }
+        }
+
+        $message = tg_parse_msg(lang('pool_found_matches'),array(
+            'count'=>$count
+        ));
+
+        $buttons = array($column1,$column2);
+        $extras = array(
+            'reply_markup'=>tg_inline_keyboard($buttons)
+        );
+        
+        return tg_send_message($message,$this->current_user_id,$extras);
     }
 
     public function view_hookup($pool_id)
