@@ -304,6 +304,10 @@ class Cmd_profile
         //If the update in the db was successful ~ show success message
         if($update_status)
         {   
+            $this->ci->load->model('bot_trace_model');
+            //Remove the last message from bot trace ~ since this has already been handled
+            $this->ci->bot_trace_model->remove_user_trace($user_id);
+
             $message = tg_parse_msg(lang('profile_attribute_success'),array(
                 'action' => 'set',#TODO: Use lang file for localization of this
                 'attribute' => $attr

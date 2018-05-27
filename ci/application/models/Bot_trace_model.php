@@ -48,4 +48,13 @@ class Bot_trace_model extends MY_Model
         return (bool)$set_status;
     }
     
+    //Removes the user's bot trace data ~ useful for resetting bot trace values
+    public function remove_user_trace($user_id)
+    {
+        $data = array(
+            'last_bot_message_id' => NULL,
+            'last_bot_message' => NULL
+        );
+        return $this->set_trace($data,$user_id);
+    }
 }
