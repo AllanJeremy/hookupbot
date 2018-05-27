@@ -36,21 +36,18 @@ class Telegram
         {   return $url;    }
 
         $count = 0;
-        foreach($params as $param)
+        foreach($params as $key=>$value)
         {
             $prefix = '&';
             //If it is the first param and concatenation is disabled ~ then set the prefix to ''
             if($count == 0 && !$is_concat)
             {   $prefix = ''; }
 
-            //Get the key name ~ we will use this as the param name in the url
-            $key = key($param);
-
             //If the key is not set start again
             if(!isset($key))
             {   continue;   }
 
-            $value = $param[$key];
+
             //Check if the value is an array. If it is pass it as a json object
             if(is_array($value))
             {   $value = json_encode($value); }
