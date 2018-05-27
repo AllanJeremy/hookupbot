@@ -192,8 +192,12 @@ class Cmd_profile
     //Get the phone attribute
     public function get_phone($user_id=NULL)
     {
+        $buttons = [
+            array(tg_button('Share Phone',TRUE))
+        ];
+
         $extras = array(
-            'reply_markup' => NULL
+            'reply_markup' => tg_reply_keyboard($buttons)
         );
 
         return $this->get_attribute('phone',$extras,$user_id);
@@ -203,7 +207,7 @@ class Cmd_profile
     public function get_age($user_id=NULL)
     {
         $extras = array(
-            'reply_markup' => NULL
+            'reply_markup' => tg_force_reply()
         );
 
         return $this->get_attribute('age',$extras,$user_id);
@@ -212,8 +216,13 @@ class Cmd_profile
     //Get the gender attribute
     public function get_gender($user_id=NULL)
     {
+        $buttons = [
+            array( tg_button('Male') ),
+            array( tg_button('Female') )
+        ];
+        
         $extras = array(
-            'reply_markup' => NULL
+            'reply_markup' => tg_reply_keyboard($buttons)
         );
 
         return $this->get_attribute('gender',$extras,$user_id);
@@ -222,8 +231,13 @@ class Cmd_profile
     //Get the gender_preference attribute
     public function get_gender_preference($user_id=NULL)
     {
+        $buttons = [
+            array( tg_button('Male') ),
+            array( tg_button('Female') )
+        ];
+
         $extras = array(
-            'reply_markup' => NULL
+            'reply_markup' => tg_reply_keyboard($buttons)
         );
 
         return $this->get_attribute('gender_preference',$extras,$user_id);
@@ -233,7 +247,7 @@ class Cmd_profile
     public function get_min_age($user_id=NULL)
     {
         $extras = array(
-            'reply_markup' => NULL
+            'reply_markup' => tg_force_reply()
         );
 
         return $this->get_attribute('min_age',$extras,$user_id);
@@ -243,7 +257,7 @@ class Cmd_profile
     public function get_max_age($user_id=NULL)
     {
         $extras = array(
-            'reply_markup' => NULL
+            'reply_markup' => tg_force_reply()
         );
 
         return $this->get_attribute('max_age',$extras,$user_id);
@@ -252,8 +266,12 @@ class Cmd_profile
     //Get the location attribute
     public function get_location($user_id=NULL)
     {
+        $buttons = [
+            array(tg_button('Share location',NULL,TRUE)),#Column 1
+        ];#Array of arrays containing buttons (rows,columns)
+
         $extras = array(
-            'reply_markup' => NULL
+            'reply_markup' => tg_reply_keyboard($buttons)
         );
 
         return $this->get_attribute('location',$extras,$user_id);
@@ -262,8 +280,13 @@ class Cmd_profile
     //Get the needs_appreciation attribute
     public function get_needs_appreciation($user_id=NULL)
     {
+        $buttons = [
+            array(tg_button('Yes')),#Column 1
+            array(tg_button('No'))#Column 2
+        ];#Array of arrays containing buttons (rows,columns)
+
         $extras = array(
-            'reply_markup' => NULL
+            'reply_markup' => tg_reply_keyboard($buttons)
         );
 
         return $this->get_attribute('needs_appreciation',$extras,$user_id);        
@@ -272,8 +295,13 @@ class Cmd_profile
     //Get the providing_appreciation attribute
     public function get_providing_appreciation($user_id=NULL)
     {
+        $buttons = [
+            array(tg_button('Yes')),#Column 1
+            array(tg_button('No'))#Column 2
+        ];#Array of arrays containing buttons (rows,columns)
+
         $extras = array(
-            'reply_markup' => NULL
+            'reply_markup' => tg_reply_keyboard($buttons)
         );
 
         return $this->get_attribute('providing_appreciation',$extras,$user_id);

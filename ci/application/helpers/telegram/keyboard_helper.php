@@ -18,7 +18,7 @@ function tg_inline_keyboard(array $buttons)
 }
 
 //Reply keyboard ~ returns a reply keyboard object
-function tg_reply_keyboard(array $buttons,bool $resize_keyboard=TRUE,bool $one_time_keyboard=FALSE, bool $selective=FALSE)
+function tg_reply_keyboard(array $buttons,bool $resize_keyboard=TRUE,bool $one_time_keyboard=TRUE, bool $selective=FALSE)
 {
     $ci = &get_instance();
     return $ci->keyboard->reply_keyboard($buttons,$resize_keyboard,$one_time_keyboard,$selective);

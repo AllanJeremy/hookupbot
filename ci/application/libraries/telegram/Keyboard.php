@@ -19,7 +19,7 @@ class Keyboard
     }
 
     //Reply keyboard ~ returns a reply keyboard object
-    public function reply_keyboard(array $buttons,bool $resize_keyboard=TRUE,bool $one_time_keyboard=FALSE, bool $selective=FALSE)
+    public function reply_keyboard(array $buttons,bool $resize_keyboard=TRUE,bool $one_time_keyboard=TRUE, bool $selective=FALSE)
     {
         $keyboard = array(
             'keyboard' => $buttons,
