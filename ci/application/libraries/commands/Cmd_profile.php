@@ -11,7 +11,7 @@ class Cmd_profile
     function __construct()
     {
         $this->ci = &get_instance();
-        $this->user_chat_id = $this->ci->telegram->get_user_update()->message->chat->id;
+        $this->user_chat_id = tg_get_user_update()->message->chat->id;
         
         $this->ci->load->model('user_model'); #For setting user records in the database
         $this->ci->lang->load('cmd_profile'); #For getting messages to be sent to the user
@@ -30,7 +30,7 @@ class Cmd_profile
         );
         
         //Current user id 
-        $this->current_user_id = $this->ci->telegram->get_current_user_id();
+        $this->current_user_id = tg_get_current_user_id();
     }
 
     //Handle commands ~ all commands will start running through this function
@@ -39,7 +39,7 @@ class Cmd_profile
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {
-            return $this->ci->telegram->send_invalid_cmd_message();
+            return tg_send_invalid_cmd_message();
         }
 
         $sub_cmd = &$cmd['sub_cmd'];
@@ -47,6 +47,7 @@ class Cmd_profile
         if (!isset($sub_cmd))
         {   return $this->profile();    }
 
+        $return_msg = NULL;//TODO: Set the return message in each scenario
         //Otherwise, there is a subcommand ~ switch on it
         switch($sub_cmd)
         {
@@ -73,7 +74,7 @@ class Cmd_profile
                 else //No attribute has been provided ~ show appropriate message
                 {
                     $message = lang('profile_missing_attribute');
-                    $this->ci->telegram->send_message($message);
+                    tg_send_message($message);
                 }
             break;
 
@@ -87,7 +88,7 @@ class Cmd_profile
                 else //No attribute has been provided ~ show appropriate message
                 {
                     $message = lang('profile_missing_attribute');
-                    $this->ci->telegram->send_message($message);
+                    tg_send_message($message);
                 }
             break;
 
@@ -100,7 +101,7 @@ class Cmd_profile
                 else //No attribute has been provided ~ show appropriate message
                 {
                     $message = lang('profile_missing_attribute');
-                    $this->ci->telegram->send_message($message);
+                    tg_send_message($message);
                 }
             break;
         }
@@ -114,7 +115,7 @@ class Cmd_profile
     public function profile()
     {
         $message = lang('profile_description');
-        return $this->ci->telegram->send_message($message);
+        return tg_send_message($message);
     }
 
     //Profile start
@@ -122,13 +123,13 @@ class Cmd_profile
     {
         $user_id = $user_id ?? $this->current_user_id;
         $message = lang('profile_start');
-        $start_msg = $this->ci->telegram->send_message($message);
+        $start_msg = tg_send_message($message);
 
         $this->ci->load->model('bot_trace_model');
         $trace = $this->ci->bot_trace_model->get_trace_by_user($user_id);
 
         $attr_request_msg = $this->get_attribute('phone');
-        $this->ci->telegram->send_message($attr_request_msg);
+        tg_send_message($attr_request_msg);
     }
 
     //Profile get_attribute ~ request a user for a certain attribute
@@ -185,7 +186,7 @@ class Cmd_profile
             default:
                 $message = lang('profile_unknown_attribute');
         }
-        $bot_message = $this->ci->telegram->send_message($message);#The message sent to the bot
+        $bot_message = tg_send_message($message);#The message sent to the bot
         
         $trace_data['last_bot_message_id'] = $bot_message->message_id;
         $trace_data['last_bot_message'] = $message;
@@ -210,7 +211,7 @@ class Cmd_profile
                 'action' => 'set',#TODO: Use lang file for localization of this
                 'attribute' => $attr
             ));
-            return $this->ci->telegram->send_message($message);
+            return tg_send_message($message);
         }
         
         //Set the update data
@@ -240,7 +241,7 @@ class Cmd_profile
         //Return status and message
         return array(
             'ok' => (bool)$update_status,
-            'message' => $this->ci->telegram->send_message($message)#TODO: Add reply keyboards
+            'message' => tg_send_message($message)#TODO: Add reply keyboards
         ); 
     }
     
@@ -254,7 +255,7 @@ class Cmd_profile
             $message = tg_parse_msg(lang('profile_unknown_attribute'),array(
                 'attribute' => $attr
             ));
-            return $this->ci->telegram->send_message($message);
+            return tg_send_message($message);
         }
 
         $remove_status = $this->ci->user_model->remove_user_data($user_id,array($attr));
@@ -275,7 +276,7 @@ class Cmd_profile
             ));
         }
        
-        $sent_message = $this->ci->telegram->send_message($message);#TODO: Add reply keyboards
+        $sent_message = tg_send_message($message);#TODO: Add reply keyboards
         //Return status and message
         return array(
             'ok' => (bool)$remove_status,
@@ -310,7 +311,7 @@ class Cmd_profile
             ));
         }
 
-        return $this->ci->telegram->send_message($message);
+        return tg_send_message($message);
     }
 
     //Profile attribute info
@@ -376,6 +377,6 @@ class Cmd_profile
             }
         }
 
-        return $this->ci->telegram->send_message($message);
+        return tg_send_message($message);
     }
 }

@@ -15,11 +15,11 @@ class Cmd_help
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {
-            return $this->ci->telegram->debug_message($cmd['message']);
+            return tg_debug_message($cmd['message']);
         }
 
         //TODO: Add implementation
-        $this->ci->telegram->debug_message('You used the help command punk');
+        tg_debug_message('You used the help command punk');
     }
 
     /* 

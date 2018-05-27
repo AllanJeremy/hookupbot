@@ -16,7 +16,7 @@ class Cmd_start
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {
-            return $this->ci->telegram->debug_message($cmd['message']);
+            return tg_debug_message($cmd['message']);
         }
 
         //Check the command for a subcommand ~ if none was provided ~ run the start command
@@ -64,7 +64,7 @@ class Cmd_start
         $message = lang('start_intro');
         $set_status = $this->ci->user_model->set_user_data($data);
 
-        $message_status = $this->ci->telegram->send_message($message);#TODO: Add buttons
+        $message_status = tg_send_message($message);#TODO: Add buttons
 
         return array(
             'ok'=> (bool)$set_status, #Whether the records were set correctly in the database
@@ -76,6 +76,6 @@ class Cmd_start
     protected function start_info()
     {
         $message = lang('start_details');
-        return $this->ci->telegram->send_message($message);#TODO: Add buttons
+        return tg_send_message($message);#TODO: Add buttons
     }
 }

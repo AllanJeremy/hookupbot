@@ -79,7 +79,7 @@ class Cmd_add
                         'attr_name'=>'hookup_id',
                         'command'=>'/view'
                     ));
-                    $return_message = $this->ci->telegram->send_message($message);
+                    $return_message = tg_send_message($message);
                 }
             break;
 
@@ -95,7 +95,7 @@ class Cmd_add
                         'attr_name'=>'pool_id',
                         'command'=>'/select'
                     ));
-                    $return_message = $this->ci->telegram->send_message($message);
+                    $return_message = tg_send_message($message);
                 }
             break;
             //TODO: Consider DRYing this
@@ -111,7 +111,7 @@ class Cmd_add
                         'attr_name'=>'request_id',
                         'command'=>'/hookup accept'
                     ));
-                    $return_message = $this->ci->telegram->send_message($message);
+                    $return_message = tg_send_message($message);
                 }
             break;
             //TODO: Consider DRYing this
@@ -127,12 +127,12 @@ class Cmd_add
                         'attr_name'=>'request_id',
                         'command'=>'/hookup decline'
                     ));
-                    $return_message = $this->ci->telegram->send_message($message);
+                    $return_message = tg_send_message($message);
                 }
             break;
         }
 
-        $this->ci->telegram->send_message('You used the hookup command punk',TEST_CHAT_ID);#TODO: Remove this ~ only for testing skeleton
+        tg_send_message('You used the hookup command punk',TEST_CHAT_ID);#TODO: Remove this ~ only for testing skeleton
         return $return_message;
         
     }
@@ -144,7 +144,7 @@ class Cmd_add
     public function hookup()
     {
         $message = lang('hookup_intro');
-        return $this->ci->telegram->send_message($message);
+        return tg_send_message($message);
     }
 
     //Add self to hookup pool to hookup pool
@@ -162,7 +162,7 @@ class Cmd_add
         else
         {   $message = lang('pool_add_failure');    }
 
-        return $this->ci->telegram->send_message($message);
+        return tg_send_message($message);
     }
 
     //Remove self from hookup pool
@@ -177,7 +177,7 @@ class Cmd_add
         else
         {   $message = lang('pool_remove_failure');    }
 
-        return $this->ci->telegram->send_message($message);
+        return tg_send_message($message);
     }
 
     //Find hookups in hookup pool
@@ -216,7 +216,7 @@ class Cmd_add
             ));
         }
 
-        return $this->ci->telegram->send_message($message);
+        return tg_send_message($message);
     }
 
     public function select_hookup($pool_id)
@@ -235,14 +235,14 @@ class Cmd_add
             ));
 
             //Send a message to the requested hookup partner
-            $this->ci->telegram->send_message($message,$hookup->hookup_user_id);#TODO:Add accept and decline buttons
+            tg_send_message($message,$hookup->hookup_user_id);#TODO:Add accept and decline buttons
         }
         else
         {
             $status_message = lang('hookup_select_failure');
         }
 
-        return $this->ci->telegram->send_message($status_message);
+        return tg_send_message($status_message);
     }
 
     //Handle hookup request acceptance
@@ -282,7 +282,7 @@ class Cmd_add
             ));
         }
         // Return a message
-        return $this->ci->telegram->send_message($message,$requester->hookup_user_id);
+        return tg_send_message($message,$requester->hookup_user_id);
     }
 
     //Accept hookup request

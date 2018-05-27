@@ -13,16 +13,16 @@ class Cmd_handler
     //Handle command ~ entry point for all commands in this library
     public function handle_command($cmd)
     {
-        // $this->ci->telegram->debug_message(json_encode($cmd));
+        // tg_debug_message(json_encode($cmd));
         //If the command was not okay print the error message
         if( !is_array($cmd['commands']) || !isset($cmd['commands']) || !$cmd['ok'])
         {
-            return $this->ci->telegram->debug_message('I did not understand that command, please check /help for a list of available commands.');
+            return tg_debug_message('I did not understand that command, please check /help for a list of available commands.');
         }
         
         $test_msg = 'Command start class exists : ';
         $handled = NULL;
-        // $this->ci->telegram->debug_message($test_msg.(class_exists('Cmd_start')));
+        // tg_debug_message($test_msg.(class_exists('Cmd_start')));
         //Commands available
         foreach($cmd['commands'] as $cmd)
         {
@@ -86,7 +86,7 @@ class Cmd_handler
                     $handled = $this->ci->cmd_hookup->handle_command($cmd);
                 break;
                 // default: 
-                //     $this->ci->telegram->debug_message(self::$unknown_cmd_msg);
+                //     tg_debug_message(self::$unknown_cmd_msg);
             }
         }
 
