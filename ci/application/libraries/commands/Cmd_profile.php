@@ -51,8 +51,12 @@ class Cmd_profile
         //Otherwise, there is a subcommand ~ switch on it
         switch($sub_cmd)
         {
-            case 'start': #Profile start ~ starts the queries for questions to be asked
+            case 'start': #Profile start ~ shows message for starting profile setup
                 $this->profile_start();
+            break;
+
+            case 'setup': #Profile setup ~ sequentially asks user to enter profile details
+                $this->profile_setup();
             break;
 
             case 'info': #Profile info ~ starts the queries for questions to be asked
@@ -69,7 +73,24 @@ class Cmd_profile
                 if($attr = $cmd['attr'])
                 {
                     $value = $cmd['value'];
-                    $this->get_attribute($attr);
+                    $function_name = 'get_'.$attr;#Name of the function to be called
+                    
+                    try //Try calling the corresponding getter function
+                    {
+                        call_user_func(
+                            array($this,$function_name),
+                            $this->current_user_id
+                        );//Call the exact function needed to set the attribute provided
+                    }
+                    catch(Exception $e)//Function we tried to call doesn't exist, means invalid attribute get request
+                    {
+                        $message = tg_parse_msg(lang('profile_attribute_failure'),array(
+                            'action'=>'get',
+                            'attribute'=>$attr
+                        ));
+                        tg_send_message($message);
+                    }
+
                 }
                 else //No attribute has been provided ~ show appropriate message
                 {
@@ -125,78 +146,137 @@ class Cmd_profile
         $message = lang('profile_start');
         $start_msg = tg_send_message($message);
 
+        return $start_msg;
+    }
+
+    //Sequential profile setup
+    public function profile_setup()
+    {
+        //TODO: Add actual implementation
+        $user_id = $user_id ?? $this->current_user_id;
+        
         $this->ci->load->model('bot_trace_model');
         $trace = $this->ci->bot_trace_model->get_trace_by_user($user_id);
 
+        //TODO: Show the next setup step based on the previous setup step
         $attr_request_msg = $this->get_attribute('phone');
         tg_send_message($attr_request_msg);
     }
 
     //Profile get_attribute ~ request a user for a certain attribute
-    public function get_attribute($attr,$user_id=NULL)
+    protected function get_attribute($attr,$extras=NULL,$user_id=NULL)
     {
-        $this->ci->load->model('bot_trace_model');
-        
-        $trace_data = array(
-            'last_bot_message_id' => '',
-            'last_bot_message' => ''
-        );
-
         $user_id = $user_id ?? $this->current_user_id;
-        $message = NULL;
-        //Determine which attribute message to show
-        switch($attr)
-        {
-            case 'phone':
-                $message = lang('profile_get_phone');
-            break;
-                
-            case 'age':
-                $message = lang('profile_get_age');
-            break;
-
-            case 'gender':
-                $message = lang('profile_get_gender');
-            break;
-
-            case 'gender_preference':
-                $message = lang('profile_get_gender_preference');
-            break;
-
-            case 'min_age':
-                $message = lang('profile_get_min_age');
-            break;
-
-            case 'max_age':
-                $message = lang('profile_get_max_age');
-            break;
-
-            case 'location':
-                $message = lang('profile_get_location');
-            break;
-
-            case 'needs_appreciation':
-                $message = lang('profile_get_needs_appreciation');
-            break;
-
-            case 'providing_appreciation':
-                $message = lang('profile_get_providing_appreciation');
-            break;
-
-            default:
-                $message = lang('profile_unknown_attribute');
-        }
-        $bot_message = tg_send_message($message);#The message sent to the bot
         
-        $trace_data['last_bot_message_id'] = $bot_message->message_id;
-        $trace_data['last_bot_message'] = $message;
-
+        $message = $message = lang('profile_get_'.$attr);
+        $bot_message = tg_send_message($message,$user_id,$extras);#The message sent to the bot
+        
+        //Data to add to the bot trace table ~ keeping track of the last message
+        $trace_data = array(
+            'last_bot_message_id' => $bot_message->message_id,
+            'last_bot_message' => $message
+        );
+        
+        $this->ci->load->model('bot_trace_model');
         $set_trace_status = $this->ci->bot_trace_model->set_trace($trace_data,$user_id);
 
         return array(
             'ok' => (bool)$set_trace_status,
             'message' => $bot_message
         );
+    }
+
+    /* 
+        VARIOUS ATTRIBUTE GETTERS
+    */
+    //Get the phone attribute
+    public function get_phone($user_id=NULL)
+    {
+        $extras = array(
+            'reply_markup' => NULL
+        );
+
+        return $this->get_attribute('phone',$extras,$user_id);
+    }
+
+    //Get the age attribute
+    public function get_age($user_id=NULL)
+    {
+        $extras = array(
+            'reply_markup' => NULL
+        );
+
+        return $this->get_attribute('age',$extras,$user_id);
+    }
+
+    //Get the gender attribute
+    public function get_gender($user_id=NULL)
+    {
+        $extras = array(
+            'reply_markup' => NULL
+        );
+
+        return $this->get_attribute('gender',$extras,$user_id);
+    }
+
+    //Get the gender_preference attribute
+    public function get_gender_preference($user_id=NULL)
+    {
+        $extras = array(
+            'reply_markup' => NULL
+        );
+
+        return $this->get_attribute('gender_preference',$extras,$user_id);
+    }
+
+    //Get the min_age attribute
+    public function get_min_age($user_id=NULL)
+    {
+        $extras = array(
+            'reply_markup' => NULL
+        );
+
+        return $this->get_attribute('min_age',$extras,$user_id);
+    }
+
+    //Get the max_age attribute
+    public function get_max_age($user_id=NULL)
+    {
+        $extras = array(
+            'reply_markup' => NULL
+        );
+
+        return $this->get_attribute('max_age',$extras,$user_id);
+    }
+    
+    //Get the location attribute
+    public function get_location($user_id=NULL)
+    {
+        $extras = array(
+            'reply_markup' => NULL
+        );
+
+        return $this->get_attribute('location',$extras,$user_id);
+    }
+    
+    //Get the needs_appreciation attribute
+    public function get_needs_appreciation($user_id=NULL)
+    {
+        $extras = array(
+            'reply_markup' => NULL
+        );
+
+        return $this->get_attribute('needs_appreciation',$extras,$user_id);        
+    }
+    
+    //Get the providing_appreciation attribute
+    public function get_providing_appreciation($user_id=NULL)
+    {
+        $extras = array(
+            'reply_markup' => NULL
+        );
+
+        return $this->get_attribute('providing_appreciation',$extras,$user_id);
     }
 
     //Profile set_attribute

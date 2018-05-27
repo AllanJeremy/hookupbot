@@ -20,7 +20,7 @@ class Cmd_handler
             return tg_debug_message('I did not understand that command, please check /help for a list of available commands.');
         }
         
-        $test_msg = 'Command start class exists : ';
+        tg_debug_message('Handling command : '.json_encode($cmd));
         $handled = NULL;
         // tg_debug_message($test_msg.(class_exists('Cmd_start')));
         //Commands available
