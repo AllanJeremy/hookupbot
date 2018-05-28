@@ -90,6 +90,8 @@ GENERAL CUSTOM CONSTANTS
 define('LOWER_ID_BOUND',100000);
 define('UPPER_ID_BOUND',100000000);
 
+define('MAX_MATCHES_COUNT',10);#Maximum number of matches that be fetched at a time
+
 /* 
 TABLES BEING USED
 */
