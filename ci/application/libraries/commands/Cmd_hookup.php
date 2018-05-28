@@ -23,6 +23,9 @@ class Cmd_add
     //Handle commands ~ all commands will start running through this function
     public function handle_command($cmd)
     {
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {   return $this->ci->telegram->send_invalid_cmd_message();   }
@@ -79,7 +82,7 @@ class Cmd_add
                         'attr_name'=>'hookup_id',
                         'command'=>'/view'
                     ));
-                    $return_message = tg_send_message($message);
+                    $return_message = tg_send_message($message,$this->current_user_id,$extras);
                 }
             break;
 
@@ -95,7 +98,7 @@ class Cmd_add
                         'attr_name'=>'pool_id',
                         'command'=>'/select'
                     ));
-                    $return_message = tg_send_message($message);
+                    $return_message = tg_send_message($message,$this->current_user_id,$extras);
                 }
             break;
             //TODO: Consider DRYing this
@@ -111,7 +114,7 @@ class Cmd_add
                         'attr_name'=>'request_id',
                         'command'=>'/hookup accept'
                     ));
-                    $return_message = tg_send_message($message);
+                    $return_message = tg_send_message($message,$this->current_user_id,$extras);
                 }
             break;
             //TODO: Consider DRYing this
@@ -127,7 +130,7 @@ class Cmd_add
                         'attr_name'=>'request_id',
                         'command'=>'/hookup decline'
                     ));
-                    $return_message = tg_send_message($message);
+                    $return_message = tg_send_message($message,$this->current_user_id,$extras);
                 }
             break;
         }
@@ -144,7 +147,10 @@ class Cmd_add
     public function hookup()
     {
         $message = lang('hookup_intro');
-        return tg_send_message($message);
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
+        return tg_send_message($message,$this->current_user_id,$extras);
     }
 
     //Add self to hookup pool to hookup pool
@@ -162,7 +168,10 @@ class Cmd_add
         else
         {   $message = lang('pool_add_failure');    }
 
-        return tg_send_message($message);
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
+        return tg_send_message($message,$this->current_user_id,$extras);
     }
 
     //Remove self from hookup pool
@@ -177,7 +186,10 @@ class Cmd_add
         else
         {   $message = lang('pool_remove_failure');    }
 
-        return tg_send_message($message);
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
+        return tg_send_message($message,$this->current_user_id,$extras);
     }
 
     //Find hookups in hookup pool
@@ -232,7 +244,7 @@ class Cmd_add
         $extras = array(
             'reply_markup'=>tg_inline_keyboard($buttons)
         );
-        
+
         return tg_send_message($message,$this->current_user_id,$extras);
     }
 
@@ -266,7 +278,10 @@ class Cmd_add
             ));
         }
 
-        return tg_send_message($message);
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
+        return tg_send_message($message,$this->current_user_id,$extras);
     }
 
     public function select_hookup($pool_id)
@@ -284,15 +299,26 @@ class Cmd_add
                 'location'=>$hookup->location
             ));
 
+            $buttons = array(
+                [ tg_inline_button('Accept',array('callback_query'=>'/hookup accept '.$pool_id) )],
+                [ tg_inline_button('Decline',array('callback_query'=>'/hookup decline '.$pool_id) )]
+            );
+
+            $extras = array(
+                'reply_markup' => tg_inline_keyboard($buttons)
+            );
             //Send a message to the requested hookup partner
-            tg_send_message($message,$hookup->hookup_user_id);#TODO:Add accept and decline buttons
+            tg_send_message($message,$hookup->hookup_user_id,$extras);#TODO: accept and decline buttons
         }
         else
         {
             $status_message = lang('hookup_select_failure');
         }
 
-        return tg_send_message($status_message);
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
+        return tg_send_message($message,$this->current_user_id,$extras);
     }
 
     //Handle hookup request acceptance
@@ -331,14 +357,19 @@ class Cmd_add
                 'action'=> 'accept the hookup request'#TODO: Move this to lang file for localization
             ));
         }
+
+        //Remove the reply keyboard 
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
         // Return a message
-        return tg_send_message($message,$requester->hookup_user_id);
+        return tg_send_message($message,$requester->hookup_user_id,$extras);
     }
 
     //Accept hookup request
     public function accept_hookup_request($request_id)
     {
-        return $this->_handle_hookup_request_accept($request_id,TRUE);
+        return $this->_handle_hookup_request_accept($request_id,TRUE);#TODO: Add buttons here
     }
 
     //Decline hookup request
