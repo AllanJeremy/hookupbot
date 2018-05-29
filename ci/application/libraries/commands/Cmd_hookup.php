@@ -146,10 +146,16 @@ class Cmd_add
     //Hookup base command
     public function hookup()
     {
-        $message = lang('hookup_intro');
-        $extras = array(
-            'reply_markup'=>tg_reply_keyboard_remove()
+        $buttons = array(
+            [ tg_inline_button('Find hookups',array('callback_query'=>'/hookup find')) ],
+            [ tg_inline_button('Join hookup pool',array('callback_query'=>'/hookup add')) ],
+            [ tg_inline_button('Leave hookup pool',array('callback_query'=>'/hookup remove')) ]
         );
+        $extras = array(
+            'reply_markup'=>tg_inline_keyboard($buttons)
+        );
+
+        $message = lang('hookup_intro');
         return tg_send_message($message,$this->current_user_id,$extras);
     }
 
