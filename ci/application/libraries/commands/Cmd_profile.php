@@ -109,9 +109,10 @@ class Cmd_profile
                     $value = $cmd['value'];
                     $this->set_attribute($attr,$value);
                 }
-                else //No attribute has been provided ~ show appropriate message
+                else //No attribute has been provided ~ show list of attributes you can set
                 {
-                    $message = lang('profile_missing_attribute');
+                    //We want the keyboard buttons to be used to get the attributes ~ which will then allow us to set the attributes as a reply
+                    $extras['reply_markup'] = $this->_get_editable_attribute_keyboard('get');
                     tg_send_message($message,$this->current_user_id,$extras);
                 }
             break;
@@ -124,7 +125,7 @@ class Cmd_profile
                 }
                 else //No attribute has been provided ~ show appropriate message
                 {
-                    $message = lang('profile_missing_attribute');
+                    $extras['reply_markup'] = $this->_get_editable_attribute_keyboard('remove');
                     tg_send_message($message,$this->current_user_id,$extras);
                 }
             break;
@@ -132,10 +133,40 @@ class Cmd_profile
         
     }
 
+    // Returns an inline keyboard containing a list of all the editable commands
+    private function _get_editable_attribute_keyboard($command)# Convenience function
+    {
+        $command = '/profile '.$command.' ';# For example /profile set
+
+        $buttons = array(#TODO: Consider using the editable attribute array to dynamically generate this
+            [
+                tg_inline_button('Phone',array('callback_query'=>$command.'phone')),
+                tg_inline_button('Age',array('callback_query'=>$command.' age')),  
+            ],
+            [
+                tg_inline_button('Gender',array('callback_query'=>$command.'gender')),
+                tg_inline_button('Gender preference',array('callback_query'=>$command.' gender_preference')),
+            ],
+            [
+                tg_inline_button('Min age',array('callback_query'=>$command.'min_age')),
+                tg_inline_button('Max age',array('callback_query'=>$command.'max_age')),
+            ],
+            [
+                tg_inline_button('Location',array('callback_query'=>$command.'location')),
+            ],
+            [
+                tg_inline_button('Needs appreciation',array('callback_query'=>$command.'needs_appreciation')),
+                tg_inline_button('Providing appreciation',array('callback_query'=>$command.'providing_appreciation')),
+            ],
+        );
+
+        return tg_inline_keyboard($buttons);
+    }
+
     /* 
         Functions to handle subcommands will be here
     */
-
+    //Send a message to the user
     private function _send_message_to_user($message,$user_id=NULL)
     {
         $user_id = $user_id ?? $this->current_user_id;
@@ -145,6 +176,17 @@ class Cmd_profile
     //Profile command with no sub-commands
     public function profile($user_id=NULL)
     {
+        $buttons = array(
+            [
+                tg_inline_button('Setup profile',array('callback_query'=>'/profile setup')),
+                tg_inline_button('Information',array('callback_query'=>'/profile info'))
+            ],
+            [
+                tg_inline_button('Set attribute',array('callback_query'=>'/profile set')),
+                tg_inline_button('Remove attribute',array('callback_query'=>'/profile remove'))
+            ]
+        );
+        $extras = tg_inline_keyboard($buttons);
         return $this->_send_message_to_user(lang('profile_description'),$user_id);
     }
 

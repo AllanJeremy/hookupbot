@@ -1,11 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
 // Profile command related messages
-$lang['profile_description'] = "This command allows you to manage your profile. Below is a a list of sub-commands that it has to work with your profile:
-/profile start - Starts the profile setup process
-/profile info - Returns information about your profile
-/profile set [attribute] [value] - sets or updates the value of an attribute. For example /p set age 20 will set the age to 20. Multiple commands can be set through multiple lines
-/profile remove [attribute] - removes the value of an attribute
+$lang['profile_description'] = "This command allows you to manage your profile. Below is a a list of sub-commands that it has to work with your profile.
 ";
 
 $lang['profile_start'] = "I know you want to hookup. Before you do that, we'll need to setup a few things to help you find the best hookups for you.";#Starting the profile query command
