@@ -36,6 +36,9 @@ class Cmd_profile
     //Handle commands ~ all commands will start running through this function
     public function handle_command($cmd)
     {
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
         //If the command was not okay print the error message
         if( !is_array($cmd))
         {
@@ -88,14 +91,14 @@ class Cmd_profile
                             'action'=>'get',
                             'attribute'=>$attr
                         ));
-                        tg_send_message($message);
+                        tg_send_message($message,$this->current_user_id,$extras);
                     }
 
                 }
                 else //No attribute has been provided ~ show appropriate message
                 {
                     $message = lang('profile_missing_attribute');
-                    tg_send_message($message);
+                    tg_send_message($message,$this->current_user_id,$extras);
                 }
             break;
 
@@ -109,7 +112,7 @@ class Cmd_profile
                 else //No attribute has been provided ~ show appropriate message
                 {
                     $message = lang('profile_missing_attribute');
-                    tg_send_message($message);
+                    tg_send_message($message,$this->current_user_id,$extras);
                 }
             break;
 
@@ -122,7 +125,7 @@ class Cmd_profile
                 else //No attribute has been provided ~ show appropriate message
                 {
                     $message = lang('profile_missing_attribute');
-                    tg_send_message($message);
+                    tg_send_message($message,$this->current_user_id,$extras);
                 }
             break;
         }
@@ -132,21 +135,23 @@ class Cmd_profile
     /* 
         Functions to handle subcommands will be here
     */
-    //Profile command with no sub-commands
-    public function profile()
+
+    private function _send_message_to_user($message,$user_id=NULL)
     {
-        $message = lang('profile_description');
-        return tg_send_message($message);
+        $user_id = $user_id ?? $this->current_user_id;
+        return tg_send_message($message,$user_id);
+    }
+
+    //Profile command with no sub-commands
+    public function profile($user_id=NULL)
+    {
+        return $this->_send_message_to_user(lang('profile_description'),$user_id);
     }
 
     //Profile start
     public function profile_start($user_id=NULL)
     {
-        $user_id = $user_id ?? $this->current_user_id;
-        $message = lang('profile_start');
-        $start_msg = tg_send_message($message);
-
-        return $start_msg;
+        return $this->_send_message_to_user(lang('profile_start'),$user_id);
     }
 
     //Sequential profile setup
@@ -319,7 +324,7 @@ class Cmd_profile
                 'action' => 'set',#TODO: Use lang file for localization of this
                 'attribute' => $attr
             ));
-            return tg_send_message($message);
+            return tg_send_message($message,$user_id);
         }
         
         //Set the update data
@@ -350,10 +355,13 @@ class Cmd_profile
              ));   
         }
 
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
         //Return status and message
         return array(
             'ok' => (bool)$update_status,
-            'message' => tg_send_message($message)#TODO: Add reply keyboards
+            'message' => tg_send_message($message,$user_id,$extras)#TODO: Add reply keyboards
         ); 
     }
     
@@ -367,7 +375,7 @@ class Cmd_profile
             $message = tg_parse_msg(lang('profile_unknown_attribute'),array(
                 'attribute' => $attr
             ));
-            return tg_send_message($message);
+            return tg_send_message($message,$user_id);
         }
 
         $remove_status = $this->ci->user_model->remove_user_data($user_id,array($attr));
@@ -387,8 +395,11 @@ class Cmd_profile
                 'attribute' => $attr
             ));
         }
-       
-        $sent_message = tg_send_message($message);#TODO: Add reply keyboards
+        
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
+        $sent_message = tg_send_message($message,$user_id,$extras);# Add reply keyboards
         //Return status and message
         return array(
             'ok' => (bool)$remove_status,
@@ -423,7 +434,7 @@ class Cmd_profile
             ));
         }
 
-        return tg_send_message($message);
+        return tg_send_message($message,$user_id);
     }
 
     //Profile attribute info
@@ -489,6 +500,9 @@ class Cmd_profile
             }
         }
 
-        return tg_send_message($message);
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
+        return tg_send_message($message,$user_id,$extras);
     }
 }
