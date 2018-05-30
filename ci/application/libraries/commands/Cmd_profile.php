@@ -140,23 +140,23 @@ class Cmd_profile
 
         $buttons = array(#TODO: Consider using the editable attribute array to dynamically generate this
             [
-                tg_inline_button('Phone',array('callback_query'=>$command.'phone')),
-                tg_inline_button('Age',array('callback_query'=>$command.' age')),  
+                tg_inline_button('Phone',array('callback_data'=>$command.'phone')),
+                tg_inline_button('Age',array('callback_data'=>$command.' age')),  
             ],
             [
-                tg_inline_button('Gender',array('callback_query'=>$command.'gender')),
-                tg_inline_button('Gender preference',array('callback_query'=>$command.' gender_preference')),
+                tg_inline_button('Gender',array('callback_data'=>$command.'gender')),
+                tg_inline_button('Gender preference',array('callback_data'=>$command.' gender_preference')),
             ],
             [
-                tg_inline_button('Min age',array('callback_query'=>$command.'min_age')),
-                tg_inline_button('Max age',array('callback_query'=>$command.'max_age')),
+                tg_inline_button('Min age',array('callback_data'=>$command.'min_age')),
+                tg_inline_button('Max age',array('callback_data'=>$command.'max_age')),
             ],
             [
-                tg_inline_button('Location',array('callback_query'=>$command.'location')),
+                tg_inline_button('Location',array('callback_data'=>$command.'location')),
             ],
             [
-                tg_inline_button('Needs appreciation',array('callback_query'=>$command.'needs_appreciation')),
-                tg_inline_button('Providing appreciation',array('callback_query'=>$command.'providing_appreciation')),
+                tg_inline_button('Needs appreciation',array('callback_data'=>$command.'needs_appreciation')),
+                tg_inline_button('Providing appreciation',array('callback_data'=>$command.'providing_appreciation')),
             ],
         );
 
@@ -167,27 +167,31 @@ class Cmd_profile
         Functions to handle subcommands will be here
     */
     //Send a message to the user
-    private function _send_message_to_user($message,$user_id=NULL)
+    private function _send_message_to_user($message,$user_id=NULL,$extras=NULL)
     {
         $user_id = $user_id ?? $this->current_user_id;
-        return tg_send_message($message,$user_id);
+        // return tg_send_message($message,$user_id);
+        return tg_debug_message($message,$extras);
     }
 
     //Profile command with no sub-commands
     public function profile($user_id=NULL)
     {
+        echo 'profile';
         $buttons = array(
             [
-                tg_inline_button('Setup profile',array('callback_query'=>'/profile setup')),
-                tg_inline_button('Information',array('callback_query'=>'/profile info'))
+                tg_inline_button('Setup profile',array('callback_data'=>'/profile setup')),
+                tg_inline_button('Information',array('callback_data'=>'/profile info'))
             ],
             [
-                tg_inline_button('Set attribute',array('callback_query'=>'/profile set')),
-                tg_inline_button('Remove attribute',array('callback_query'=>'/profile remove'))
+                tg_inline_button('Set attribute',array('callback_data'=>'/profile set')),
+                tg_inline_button('Remove attribute',array('callback_data'=>'/profile remove'))
             ]
         );
-        $extras = tg_inline_keyboard($buttons);
-        return $this->_send_message_to_user(lang('profile_description'),$user_id);
+        $extras = array(
+            'reply_markup'=>tg_inline_keyboard($buttons)
+        );
+        return $this->_send_message_to_user(lang('profile_description'),$user_id,$extras);
     }
 
     //Profile start

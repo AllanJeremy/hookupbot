@@ -20,7 +20,6 @@ class Cmd_handler
             return tg_debug_message('I did not understand that command, please check /help for a list of available commands.');
         }
         
-        tg_debug_message('Handling command : '.json_encode($cmd));
         $handled = NULL;
         // tg_debug_message($test_msg.(class_exists('Cmd_start')));
         //Commands available
@@ -56,35 +55,16 @@ class Cmd_handler
                     $handled = $this->ci->cmd_profile->handle_command($cmd);
                 break;
 
-                case CMD_FIND:#Find matching members in hookup pool
-                case CMD_HOOKUP:
-                    $this->ci->load->library('commands/cmd_find');
-                    $handled = $this->ci->cmd_find->handle_command($cmd);
-                break;
-                
                 case CMD_ADD:#Add self to hookup pool
-                case CMD_HOOKUP:
-                    $this->ci->load->library('commands/cmd_hookup');
-                    $handled = $this->ci->cmd_hookup->handle_command($cmd);
-                break;
-                
+                case CMD_FIND:#Find matching members in hookup pool
                 case CMD_SELECT:#Select a hookup from hookup pool
-                case CMD_HOOKUP:
-                    $this->ci->load->library('commands/cmd_hookup');
-                    $handled = $this->ci->cmd_hookup->handle_command($cmd);
-                break;
-                
                 case CMD_VIEW:#View single hookup profile from hookup pool
-                case CMD_HOOKUP:
-                    $this->ci->load->library('commands/cmd_hookup');
-                    $handled = $this->ci->cmd_hookup->handle_command($cmd);
-                break;
-                
                 case CMD_REMOVE:#Remove self from hookup pool
-                case CMD_HOOKUP:
+                case CMD_HOOKUP:#Manage hookups
                     $this->ci->load->library('commands/cmd_hookup');
                     $handled = $this->ci->cmd_hookup->handle_command($cmd);
                 break;
+            
                 // default: 
                 //     tg_debug_message(self::$unknown_cmd_msg);
             }

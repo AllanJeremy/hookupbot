@@ -25,4 +25,9 @@ class Cmd_payment
     /* 
         Functions to handle subcommands will be here
     */
+    //Confirm payment ~ returns true on success and false on failure
+    public function confirm_payment($request_id,$payment_id)
+    {
+
+    }
 }

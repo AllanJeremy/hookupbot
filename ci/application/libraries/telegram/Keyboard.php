@@ -13,7 +13,7 @@ class Keyboard
     public function inline_keyboard(array $buttons)
     {
         $keyboard = array(
-            'inline_keyboard' => json_encode($buttons)
+            'inline_keyboard' => ($buttons)
         );
         return $keyboard;
     }
@@ -28,7 +28,7 @@ class Keyboard
             'selective' => (bool)$selective,
         );
 
-        return json_encode($keyboard);
+        return ($keyboard);
     }
 
     //Reply keyboard remove ~ returns a reply_keyboard remove object

@@ -23,6 +23,7 @@ class Cmd_add
     //Handle commands ~ all commands will start running through this function
     public function handle_command($cmd)
     {
+        tg_debug_message('In hookup handler');
         $extras = array(
             'reply_markup'=>tg_reply_keyboard_remove()
         );
@@ -151,9 +152,9 @@ class Cmd_add
     public function hookup()
     {
         $buttons = array(
-            [ tg_inline_button('Find hookups',array('callback_query'=>'/hookup find')) ],
-            [ tg_inline_button('Join hookup pool',array('callback_query'=>'/hookup add')) ],
-            [ tg_inline_button('Leave hookup pool',array('callback_query'=>'/hookup remove')) ]
+            [ tg_inline_button('Find hookups',array('callback_data'=>'/hookup find')) ],
+            [ tg_inline_button('Join hookup pool',array('callback_data'=>'/hookup add')) ],
+            [ tg_inline_button('Leave hookup pool',array('callback_data'=>'/hookup remove')) ]
         );
         $extras = array(
             'reply_markup'=>tg_inline_keyboard($buttons)
@@ -232,7 +233,7 @@ class Cmd_add
             ));
             $button_command = '/hookup view '.$hookup->id;
             $button = tg_inline_button($button_text,array(
-                'callback_query'=>$button_command
+                'callback_data'=>$button_command
             ));
 
             //If we aren't in an even number ~ add to column 1
@@ -310,8 +311,8 @@ class Cmd_add
             ));
 
             $buttons = array(
-                [ tg_inline_button('Accept',array('callback_query'=>'/hookup accept '.$pool_id) )],
-                [ tg_inline_button('Decline',array('callback_query'=>'/hookup decline '.$pool_id) )]
+                [ tg_inline_button('Accept',array('callback_data'=>'/hookup accept '.$pool_id) )],
+                [ tg_inline_button('Decline',array('callback_data'=>'/hookup decline '.$pool_id) )]
             );
 
             $extras = array(
@@ -372,7 +373,7 @@ class Cmd_add
         $extras = array(
             'reply_markup'=>tg_inline_keyboard(
                 array(
-                    [tg_inline_button('Confirm payment',array('callback_query'=>'/hookup confirm'))]
+                    [tg_inline_button('Confirm payment',array('callback_data'=>'/hookup confirm'))]
                 )
             )
         );
