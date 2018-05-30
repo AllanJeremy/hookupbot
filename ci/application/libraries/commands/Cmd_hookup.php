@@ -69,6 +69,10 @@ class Cmd_add
             case 'find':
                 $return_message = $this->find_hookups();
             break;
+            
+            case 'confirm':
+                $return_message = $this->get_confirm_payment();
+            break;
 
             case 'view':
                 //If the pool id has been set
@@ -366,10 +370,17 @@ class Cmd_add
 
         //Remove the reply keyboard 
         $extras = array(
-            'reply_markup'=>tg_reply_keyboard_remove()
+            'reply_markup'=>tg_inline_keyboard(
+                array(
+                    [tg_inline_button('Confirm payment',array('callback_query'=>'/hookup confirm'))]
+                )
+            )
         );
         // Return a message
-        return tg_send_message($message,$requester->hookup_user_id,$extras);
+        return array(
+            'ok' => (bool)$status,
+            'message'=>tg_send_message($message,$requester->hookup_user_id,$extras)
+        );
     }
 
     //Accept hookup request
@@ -382,5 +393,17 @@ class Cmd_add
     public function decline_hookup_request($request_id)
     {
         return $this->_handle_hookup_request_accept($request_id,TRUE);
+    }
+
+    //Get confirm payment method
+    public function get_confirm_payment($user_id=NULL,$request_id)
+    {
+        $user_id = $user_id ?? $this->current_user_id;
+        $message = lang('hookup_confirm_payment');
+
+        $extras = array(
+            'reply_markup'=>tg_reply_keyboard_remove()
+        );
+        return tg_send_msg($message,$user_id,$extras);
     }
 }

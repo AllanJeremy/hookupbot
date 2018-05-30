@@ -7,6 +7,8 @@ $lang['hookup_select_success'] = 'Successfully selected the hookup partner. They
 
 $lang['hookup_select_failure'] = 'Failed to select the hookup partner. Either the partner has already been taken or left the hookup pool.';
 
+$lang['hookup_confirm_payment'] = "Please enter your mpesa confirmation code to proceed";
+
 //Hookup pool specific messages ~ prefixed with pool_
 $lang['pool_add_success'] = 'Successfully added you to the hookup pool';
 
