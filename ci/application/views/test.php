@@ -17,12 +17,12 @@ $ci->hookup_model->add_to_pool($data); */
 //Test the telegram helper
 // $ci->load->library('commands/cmd_ho');
 // $ci->cmd_profile->profile(TEST_CHAT_ID);
-$buttons = [
-    array(tg_button('Share Phone',TRUE))
-];
+// $buttons = [
+//     array(tg_button('Share Phone',TRUE))
+// ];
 
-$extras = array(
-    'reply_markup' => tg_reply_keyboard($buttons)
-);
+// $extras = array(
+//     'reply_markup' => tg_reply_keyboard($buttons)
+// );
 
-tg_debug_message('testing reply keyboard',$extras);
+// tg_debug_message('testing reply keyboard',$extras);

@@ -31,26 +31,31 @@ class Cmd_handler
             switch($cmd_str)
             {
                 case CMD_START:
+                tg_debug_message('Start command');#debug
                     $this->ci->load->library('commands/cmd_start');
                     $handled = $this->ci->cmd_start->handle_command($cmd);
                 break;
                 
                 case CMD_SETTINGS:
+                tg_debug_message('Settings command');#debug
                     $this->ci->load->library('commands/cmd_settings');
                     $handled = $this->ci->cmd_settings->handle_command($cmd);
                 break;
                 
                 case CMD_HELP:
+                tg_debug_message('Help command');#debug
                     $this->ci->load->library('commands/cmd_help');
                     $handled = $this->ci->cmd_help->handle_command($cmd);
                 break;
                 
                 case CMD_PAYMENT:
+                tg_debug_message('Payment command');#debug
                     $this->ci->load->library('commands/cmd_payment');
                     $handled = $this->ci->cmd_payment->handle_command($cmd);
                 break;
                 
                 case CMD_PROFILE:#Profile 
+                tg_debug_message('Profile command');#debug
                     $this->ci->load->library('commands/cmd_profile');
                     $handled = $this->ci->cmd_profile->handle_command($cmd);
                 break;
@@ -61,6 +66,7 @@ class Cmd_handler
                 case CMD_VIEW:#View single hookup profile from hookup pool
                 case CMD_REMOVE:#Remove self from hookup pool
                 case CMD_HOOKUP:#Manage hookups
+                tg_debug_message('Hookup command: '.$cmd['cmd']);#debug
                     $this->ci->load->library('commands/cmd_hookup');
                     $handled = $this->ci->cmd_hookup->handle_command($cmd);
                 break;

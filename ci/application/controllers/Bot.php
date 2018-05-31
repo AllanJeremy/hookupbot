@@ -15,12 +15,11 @@ class Bot extends CI_Controller{
         
         //If the message is a reply ~ handle the reply
         $this->load->library('telegram/reply_handler');
-        if($this->reply_handler->is_reply($msg_text))
+        if($this->reply_handler->is_reply())
         {   $cmd_str = $this->reply_handler->get_command_string($msg_text);  }
         else //Otherwise just handle the command normally
         {   $cmd_str = $msg_text;  }
         
-        $this->telegram->debug_message('Command string : '.json_encode($cmd_str));#Debug
         $commands = $this->cmd_parser->parse($cmd_str);
         $this->cmd_handler->handle_command($commands);
     }
