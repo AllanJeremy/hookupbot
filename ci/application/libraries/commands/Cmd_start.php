@@ -4,9 +4,22 @@
 class Cmd_start
 {
     public $ci;
+    protected $cmd_profile_setup, $cmd_start_info;
+    protected $btn_txt_profile_setup, $btn_txt_start_info;
+
     function __construct()
     {
-        $this->ci = &get_instance();
+        //Commands referenced in buttons
+        $this->cmd_profile_setup = '/profile start';
+        $this->cmd_start_info = '/start info';
+
+        //Text of the buttons
+        $this->btn_txt_profile_setup = 'GET STARTED';
+        $this->btn_txt_start_info = 'MORE INFORMATION';
+
+        $this->ci = &get_instance();#get CI instance since we don't have access to CI in libraries
+        
+        //Load appropriate stuff 
         $this->ci->lang->load('cmd_start');
     }
 
@@ -63,8 +76,19 @@ class Cmd_start
         //The message to send to the user
         $message = lang('start_intro');
         $set_status = $this->ci->user_model->set_user_data($data);
+        
+        //Buttons for the start message
+        $buttons = array(
+            [ 
+                tg_inline_button($this->btn_txt_profile_setup,array('callback_data'=>$this->cmd_profile_setup)),
+                tg_inline_button($this->btn_txt_start_info,array('callback_data'=>$this->cmd_start_info))
+            ]
+        );
+        $extras = array(
+            'reply_markup'=>tg_inline_keyboard($buttons)
+        );
 
-        $message_status = tg_send_message($message);#TODO: Add buttons
+        $message_status = tg_send_message($message,tg_get_current_user_id(),$extras);;
 
         return array(
             'ok'=> (bool)$set_status, #Whether the records were set correctly in the database
@@ -76,6 +100,13 @@ class Cmd_start
     protected function start_info()
     {
         $message = lang('start_details');
-        return tg_send_message($message);#TODO: Add buttons
+
+        $buttons = array(
+            [ tg_inline_button($this->btn_txt_profile_setup,array('callback_data'=>$this->cmd_profile_setup)) ]
+        );
+        $extras = array(
+            'reply_markup'=>tg_inline_keyboard($buttons)
+        );
+        return tg_send_message($message,tg_get_current_user_id(),$extras);
     }
 }
