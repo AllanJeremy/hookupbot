@@ -39,7 +39,7 @@ class Hookup_model extends MY_Model
         
         $this->db->select($select);
         $this->db->from(TBL_HOOKUP_REQUESTS);
-        $this->db->join(TBL_POOL,TBL_HOOKUP_REQUESTS.'.hookup_id = '.TBL_POOL.'.hookup_user_id');#TODO: Check this ~ possibly bug
+        $this->db->join(TBL_POOL,TBL_HOOKUP_REQUESTS.'.hookup_id = '.TBL_POOL.'.id');#TODO: Check this ~ possibly bug
     }
 
     // Pool joins
@@ -174,13 +174,8 @@ class Hookup_model extends MY_Model
         $this->db->set(TBL_HOOKUP_REQUESTS.'.hookup_id',$hookup_pool_id);
         $add_request = isset($requester_id,$hookup_pool_id) ? $this->db->insert(TBL_HOOKUP_REQUESTS) : FALSE;
 
-        //Set the is_taken status to true in the hookup pool
-        $this->db->reset_query();
-        $this->db->where(TBL_POOL.'.id',$hookup_pool_id);
-        $this->db->set(TBL_POOL.'.is_taken',TRUE);
-        $update_pool = isset($requester_id,$hookup_pool_id) ? $this->db->update(TBL_POOL) : FALSE;
-
-        return (bool)($add_request && $update_pool);
+        //return the hookup request id if the request was successful
+        return $add_request;
     }
 
     // View hookup request
@@ -197,14 +192,11 @@ class Hookup_model extends MY_Model
         $request = $this->get_hookup_request($request_id)->row_object(); #Get the hookup request
         return isset($request);
     }
-    // Confirm hookup request ~ once payment has been made. Add to hookups table
+    // Confirm hookup request ~ adds the hookup to the hookup table
     public function confirm_hookup_request($request_id)
     {
         $this->db->set(TBL_HOOKUPS.'.request_id',$request_id);
-        
-        // Check whether the request exists or not and decide if we need to update or insert
-        $status = $this->_hookup_request_exists($request_id) ? $this->db->update(TBL_HOOKUPS) : $this->db->insert(TBL_HOOKUPS);
-        return $status; 
+        return $this->db->insert(TBL_HOOKUPS);
     }
     
     // Update hookup request status ~ accepted or declined
@@ -212,14 +204,27 @@ class Hookup_model extends MY_Model
     {
         $this->db->where(TBL_HOOKUP_REQUESTS.'.id',$request_id);
         $this->db->set(TBL_HOOKUP_REQUESTS.'.is_accepted',(bool)$accepted);
-        
-        return isset($request_id) ? $this->db->update(TBL_HOOKUP_REQUESTS) : FALSE;
+    
+        return $this->_hookup_request_exists($request_id) ? $this->db->update(TBL_HOOKUP_REQUESTS) : FALSE;
     }
 
     // Accept hookup request
     public function accept_hookup_request($request_id)
     {
-        // Confirm the hookup request once the hookup_user accepts the request
+        $request = $this->get_hookup_request($request_id)->row_object();
+
+        //If we could not find the request, return false
+        if(!isset($request))
+        {   return FALSE;   }
+
+        //We found the request : Set the is_taken status to true in the hookup pool
+        $this->db->where(TBL_POOL.'.id',$request->hookup_id);#TODO: Rename 'hookup_id' to pool_id
+
+        // User is only considered 'taken' once they have accepted a request : until then, they can receive multiple requests
+        $this->db->set(TBL_POOL.'.is_taken',TRUE);
+        $update_pool = $this->db->update(TBL_POOL);
+
+        // Confirm the hookup request once the hookup_user accepts/declines the request
         $confirm_request = $this->confirm_hookup_request($request_id);
         return $confirm_request && $this->_update_request_status($request_id,TRUE);
     }

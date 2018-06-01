@@ -30,7 +30,7 @@ $lang['pool_no_matches_found'] = "Sorry, I could not find matches for you based 
 
 $lang['pool_result_details'] = "Age: [age]\nGender : [gender]\nMin preferred age:[min_age]\nMax preferred age:[max_age]\nPreferred gender: [gender_preference] \nLocation: [location]\nAppreciation:[appreciation]\nDetails: [details]";
 
-$lang['pool_select_message'] = 'A [age]yr old [gender] from [location] matched with you and would like to hookup with you';
+$lang['pool_request_hookup'] = 'A [age]yr old [gender] from [location] matched with you and would like to hookup with you';
 
 //Hookup request specific
 $lang['request_accepted_message'] = "Congratulations, your hookup request ([age]yr old [gender] from [location]) accepted your request. You may now pay a [amount] hookup fee to [payment_info] and I'll send you her number once you confirm the payment.";

@@ -91,17 +91,17 @@ class Cmd_add
                 }
             break;
 
-            case 'select':
+            case 'request':
                 //If the pool id has been set
                 if($pool_id = $cmd['attr'])
                 {  
-                    $return_message = $this->select_hookup($pool_id); 
+                    $return_message = $this->request_hookup($pool_id); 
                 }
                 else
                 {
                     $message = tg_parse_msg(lang('missing_attr'),array(
                         'attr_name'=>'pool_id',
-                        'command'=>'/select'
+                        'command'=>'/request'
                     ));
                     $return_message = tg_send_message($message,$this->current_user_id,$extras);
                 }
@@ -295,7 +295,7 @@ class Cmd_add
         return tg_send_message($message,$this->current_user_id,$extras);
     }
 
-    public function select_hookup($pool_id)
+    public function request_hookup($pool_id)
     {
         $hookup = $this->ci->hookup_model->select_user_from_pool($pool_id)->row_object();
 
@@ -303,8 +303,12 @@ class Cmd_add
         //If a hookup was found ~ send the hookup a message
         if(isset($hookup))
         {
+            //Add the hookup request to the database
+            $request_id = $this->ci->hookup_model->make_hookup_request($pool_id,$this->current_user_id);
+
+            //Request hookup ~ generate message to be sent to the hookup requester (current user)
             $status_message = lang('hookup_select_success');
-            $message = tg_parse_msg(lang('pool_select_message'),array(
+            $message = tg_parse_msg(lang('pool_request_hookup'),array(
                 'age'=>$hookup->age,
                 'gender'=>$hookup->gender,
                 'location'=>$hookup->location
@@ -396,15 +400,4 @@ class Cmd_add
         return $this->_handle_hookup_request_accept($request_id,TRUE);
     }
 
-    //Get confirm payment method
-    public function get_confirm_payment($user_id=NULL,$request_id)
-    {
-        $user_id = $user_id ?? $this->current_user_id;
-        $message = lang('hookup_confirm_payment');
-
-        $extras = array(
-            'reply_markup'=>tg_reply_keyboard_remove()
-        );
-        return tg_send_msg($message,$user_id,$extras);
-    }
 }
