@@ -35,13 +35,12 @@ class Cmd_handler
                 break;
                 
                 case CMD_SETTINGS:
-                tg_debug_message('Settings command');#debug
+                    tg_debug_message('Settings command');#debug
                     $this->ci->load->library('commands/cmd_settings');
                     $handled = $this->ci->cmd_settings->handle_command($cmd,$callback_query);
                 break;
                 
                 case CMD_HELP:
-                tg_debug_message('Help command');#debug
                     $this->ci->load->library('commands/cmd_help');
                     $handled = $this->ci->cmd_help->handle_command($cmd,$callback_query);
                 break;

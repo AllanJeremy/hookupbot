@@ -39,7 +39,7 @@ class Bot extends CI_Controller{
     //Test the view
     function index()
     {
-        $dev_cmd_str = CMD_HOOKUP;# Command string used during development
+        $dev_cmd_str = CMD_HELP;# Command string used during development
 
         if(is_dev_environment())
         {
