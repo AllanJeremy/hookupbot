@@ -14,8 +14,8 @@ class Cmd_start
         $this->cmd_start_info = '/start info';
 
         //Text of the buttons
-        $this->btn_txt_profile_setup = 'GET STARTED';
-        $this->btn_txt_start_info = 'MORE INFORMATION';
+        $this->btn_txt_profile_setup = 'Get started';
+        $this->btn_txt_start_info = 'More info';
 
         $this->ci = &get_instance();#get CI instance since we don't have access to CI in libraries
         

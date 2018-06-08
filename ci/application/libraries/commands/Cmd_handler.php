@@ -31,7 +31,6 @@ class Cmd_handler
             switch($cmd_str)
             {
                 case CMD_START:
-                tg_debug_message('Start command');#debug
                     $this->ci->load->library('commands/cmd_start');
                     $handled = $this->ci->cmd_start->handle_command($cmd);
                 break;
