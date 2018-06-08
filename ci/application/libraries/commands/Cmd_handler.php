@@ -55,7 +55,6 @@ class Cmd_handler
                 break;
                 
                 case CMD_PROFILE:#Profile 
-                tg_debug_message('Profile command');#debug
                     $this->ci->load->library('commands/cmd_profile');
                     $handled = $this->ci->cmd_profile->handle_command($cmd);
                 break;

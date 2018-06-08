@@ -4,14 +4,12 @@
 class Cmd_profile
 {
     public $ci;
-    public $user_chat_id;
     private $_editable_attributes;#A list of attributes that can be modified
     protected $current_user_id;#The current user's id
 
     function __construct()
     {
         $this->ci = &get_instance();
-        $this->user_chat_id = tg_get_user_update()->message->chat->id;
         
         $this->ci->load->model('user_model'); #For setting user records in the database
         $this->ci->lang->load('cmd_profile'); #For getting messages to be sent to the user

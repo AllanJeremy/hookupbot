@@ -24,11 +24,34 @@ class Bot extends CI_Controller{
         $this->cmd_handler->handle_command($commands);
     }
 
+    //The dev bot initialization
+    function _dev_init_bot($cmd_str='')
+    {
+        $this->load->library('commands/cmd_handler');# Load the command handler
+        //If the message is a reply ~ handle the reply
+        $this->load->library('telegram/reply_handler');
+        if($this->reply_handler->is_reply())
+        {   $cmd_str = $this->reply_handler->get_command_string($msg_text);  }
+        
+        $commands = $this->cmd_parser->parse($cmd_str);
+        $this->cmd_handler->handle_command($commands);
+    }
     //Test the view
     function index()
     {
-        $this->init_bot();
+        $dev_cmd_str = CMD_HOOKUP;# Command string used during development
+
+        if(is_dev_environment())
+        {
+            $this->_dev_init_bot($dev_cmd_str);
+        }
+        else
+        {
+            $this->init_bot();
+        }
+        
         $this->load->view('test');
     }
+
 
 }

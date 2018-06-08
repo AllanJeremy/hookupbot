@@ -48,7 +48,7 @@ function tg_get_current_user()
 function tg_get_current_user_id()# added as an abstraction to prevent errors
 {
     $ci = &get_instance();
-    return $ci->telegram->get_current_user_id();
+    return is_dev_environment() ? TEST_CHAT_ID : $ci->telegram->get_current_user_id();
 }
 
 /* 

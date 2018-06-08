@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('language','telegram/telegram','telegram/keyboard');
+$autoload['helper'] = array('language','env','telegram/telegram','telegram/keyboard');
 
 /*
 | -------------------------------------------------------------------
