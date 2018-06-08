@@ -263,10 +263,12 @@ class Cmd_profile
     //Get the gender attribute
     public function get_gender($user_id=NULL)
     {
-        $buttons = [
-            array( tg_button('Male') ),
-            array( tg_button('Female') )
-        ];
+        $buttons = array(
+            [
+                tg_button('Male'),
+                tg_button('Female')
+            ]
+        );
         
         $extras = array(
             'reply_markup' => tg_reply_keyboard($buttons)
@@ -327,10 +329,12 @@ class Cmd_profile
     //Get the needs_appreciation attribute
     public function get_needs_appreciation($user_id=NULL)
     {
-        $buttons = [
-            array(tg_button('Yes')),#Column 1
-            array(tg_button('No'))#Column 2
-        ];#Array of arrays containing buttons (rows,columns)
+        $buttons = array(
+            [
+                tg_button('Yes'),
+                tg_button('No')
+            ]
+        );
 
         $extras = array(
             'reply_markup' => tg_reply_keyboard($buttons)
@@ -342,10 +346,12 @@ class Cmd_profile
     //Get the providing_appreciation attribute
     public function get_providing_appreciation($user_id=NULL)
     {
-        $buttons = [
-            array(tg_button('Yes')),#Column 1
-            array(tg_button('No'))#Column 2
-        ];#Array of arrays containing buttons (rows,columns)
+        $buttons = array(
+            [
+                tg_button('Yes'),
+                tg_button('No')
+            ]
+        );
 
         $extras = array(
             'reply_markup' => tg_reply_keyboard($buttons)
