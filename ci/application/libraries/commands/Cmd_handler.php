@@ -11,9 +11,8 @@ class Cmd_handler
     }
 
     //Handle command ~ entry point for all commands in this library
-    public function handle_command($cmd)
+    public function handle_command($cmd,$callback_query=NULL)
     {
-        // tg_debug_message(json_encode($cmd));
         //If the command was not okay print the error message
         if( !is_array($cmd['commands']) || !isset($cmd['commands']) || !$cmd['ok'])
         {
@@ -32,30 +31,30 @@ class Cmd_handler
             {
                 case CMD_START:
                     $this->ci->load->library('commands/cmd_start');
-                    $handled = $this->ci->cmd_start->handle_command($cmd);
+                    $handled = $this->ci->cmd_start->handle_command($cmd,$callback_query);
                 break;
                 
                 case CMD_SETTINGS:
                 tg_debug_message('Settings command');#debug
                     $this->ci->load->library('commands/cmd_settings');
-                    $handled = $this->ci->cmd_settings->handle_command($cmd);
+                    $handled = $this->ci->cmd_settings->handle_command($cmd,$callback_query);
                 break;
                 
                 case CMD_HELP:
                 tg_debug_message('Help command');#debug
                     $this->ci->load->library('commands/cmd_help');
-                    $handled = $this->ci->cmd_help->handle_command($cmd);
+                    $handled = $this->ci->cmd_help->handle_command($cmd,$callback_query);
                 break;
                 
                 case CMD_PAYMENT:
                 tg_debug_message('Payment command');#debug
                     $this->ci->load->library('commands/cmd_payment');
-                    $handled = $this->ci->cmd_payment->handle_command($cmd);
+                    $handled = $this->ci->cmd_payment->handle_command($cmd,$callback_query);
                 break;
                 
                 case CMD_PROFILE:#Profile 
                     $this->ci->load->library('commands/cmd_profile');
-                    $handled = $this->ci->cmd_profile->handle_command($cmd);
+                    $handled = $this->ci->cmd_profile->handle_command($cmd,$callback_query);
                 break;
 
                 case CMD_ADD:#Add self to hookup pool
@@ -65,7 +64,7 @@ class Cmd_handler
                 case CMD_REMOVE:#Remove self from hookup pool
                 case CMD_HOOKUP:#Manage hookups
                     $this->ci->load->library('commands/cmd_hookup');
-                    $handled = $this->ci->cmd_hookup->handle_command($cmd);
+                    $handled = $this->ci->cmd_hookup->handle_command($cmd,$callback_query);
                 break;
             
                 // default: 

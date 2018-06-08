@@ -12,7 +12,7 @@ class Bot extends CI_Controller{
         
         $chat_id = isset($cb_query) ? $cb_query->message->chat->id : $user_input->message->chat->id;//If there is callback data, get the chat id from there
         $msg_text = isset($cb_query) ? $cb_query->data : $user_input->message->text; //If there is callback data, get the message text from the callback query
-        
+
         //If the message is a reply ~ handle the reply
         $this->load->library('telegram/reply_handler');
         if($this->reply_handler->is_reply())
@@ -21,7 +21,7 @@ class Bot extends CI_Controller{
         {   $cmd_str = $msg_text;  }
         
         $commands = $this->cmd_parser->parse($cmd_str);
-        $this->cmd_handler->handle_command($commands);
+        $this->cmd_handler->handle_command($commands,$cb_query);
     }
 
     //The dev bot initialization

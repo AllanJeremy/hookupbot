@@ -85,8 +85,8 @@ class Telegram
         $url = $this->api_url.'sendMessage?';
 
         $url .= 'chat_id='.$chat_id;
-
-        #Format the text so that it is url friendly : otherwise messages with spaces won't send correctly ~ fixed issue #02 on github
+       
+        #Format the text so that it is url friendly
         $text = urlencode($text);
         $url .= '&text='.$text;
 
@@ -110,5 +110,12 @@ class Telegram
     {
         $message = is_array($message) ? json_encode($message) : $message;
         return $this->send_message($message,TEST_CHAT_ID,$extras);
+    }
+
+    //We use this whenever we make a callback query to end the progress indicator
+    public function answer_callback_query($cb_query_id)
+    {
+        $url = $this->api_url.'answerCallbackQuery?callback_query_id='.$cb_query_id;
+        return $this->_get_request($url);
     }
 }

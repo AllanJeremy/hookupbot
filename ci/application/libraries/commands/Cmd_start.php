@@ -24,7 +24,7 @@ class Cmd_start
     }
 
     //Handle commands ~ all commands will start running through this function
-    public function handle_command($cmd)#Handles ONE command at a time
+    public function handle_command($cmd,$callback_query=NULL)#Handles ONE command at a time
     {
        
         //If the command was not okay print the error message

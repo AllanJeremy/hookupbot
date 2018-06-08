@@ -10,7 +10,7 @@ class Cmd_settings
     }
 
     //Handle commands ~ all commands will start running through this function
-    public function handle_command($cmd)
+    public function handle_command($cmd,$callback_query=NULL)
     {
         //If the command was not okay print the error message
         if( !is_array($cmd))

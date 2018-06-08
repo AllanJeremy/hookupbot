@@ -45,7 +45,7 @@ function tg_get_current_user()
 }
 
 //Get current user id ~ returns id if found : false if not 
-function tg_get_current_user_id()# added as an abstraction to prevent errors
+function tg_get_current_user_id()
 {
     $ci = &get_instance();
     return is_dev_environment() ? TEST_CHAT_ID : $ci->telegram->get_current_user_id();
@@ -71,4 +71,10 @@ function tg_parse_msg(string $message,array $replacements)
     }
 
     return $message;
+}
+
+//We use this whenever we make a callback query to end the progress indicator
+function tg_answer_callback_query($cb_query_id)
+{
+    return $this->answer_callback_query($cb_query_id);
 }

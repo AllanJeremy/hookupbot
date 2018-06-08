@@ -32,7 +32,7 @@ class Cmd_profile
     }
 
     //Handle commands ~ all commands will start running through this function
-    public function handle_command($cmd)
+    public function handle_command($cmd,$callback_query=NULL)
     {
         $extras = array(
             'reply_markup'=>tg_reply_keyboard_remove()
@@ -46,18 +46,18 @@ class Cmd_profile
         $sub_cmd = &$cmd['sub_cmd'];
         // Check if the command has a subcommand ~ if not, run the base profile command
         if (!isset($sub_cmd))
-        {   return $this->profile();    }
+        {   return $this->profile($this->current_user_id);    }
 
         $return_msg = NULL;//TODO: Set the return message in each scenario
         //Otherwise, there is a subcommand ~ switch on it
         switch($sub_cmd)
         {
             case 'start': #Profile start ~ shows message for starting profile setup
-                $this->profile_start();
+                $this->profile_start($this->current_user_id);
             break;
 
             case 'setup': #Profile setup ~ sequentially asks user to enter profile details
-                $this->profile_setup();
+                $this->profile_setup($this->current_user_id);
             break;
 
             case 'info': #Profile info ~ starts the queries for questions to be asked
@@ -65,7 +65,7 @@ class Cmd_profile
                 if ($attr = $cmd['attr']) # If we're requesting an attribute's info
                 {   $this->profile_attr_info($attr);    }
                 else # Profile info
-                {   $this->profile_info();  }
+                {   $this->profile_info($this->current_user_id);  }
                 
             break;
             
@@ -168,18 +168,16 @@ class Cmd_profile
     private function _send_message_to_user($message,$user_id=NULL,$extras=NULL)
     {
         $user_id = $user_id ?? $this->current_user_id;
-        // return tg_send_message($message,$user_id);
-        return tg_debug_message($message,$extras);
+        return tg_send_message($message,$user_id,$extras);
     }
 
     //Profile command with no sub-commands
     public function profile($user_id=NULL)
     {
-        echo 'profile';
         $buttons = array(
             [
                 tg_inline_button('Setup profile',array('callback_data'=>'/profile setup')),
-                tg_inline_button('Information',array('callback_data'=>'/profile info'))
+                tg_inline_button('Profile info',array('callback_data'=>'/profile info'))
             ],
             [
                 tg_inline_button('Set attribute',array('callback_data'=>'/profile set')),

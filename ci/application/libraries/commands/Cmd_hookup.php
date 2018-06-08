@@ -21,7 +21,7 @@ class Cmd_hookup
     }
 
     //Handle commands ~ all commands will start running through this function
-    public function handle_command($cmd)
+    public function handle_command($cmd,$callback_query=NULL)
     {
         $extras = array(
             'reply_markup'=>tg_reply_keyboard_remove()
@@ -139,9 +139,7 @@ class Cmd_hookup
             break;
         }
 
-        tg_send_message('You used the hookup command punk',TEST_CHAT_ID);#TODO: Remove this ~ only for testing skeleton
-        return $return_message;
-        
+        return $cmd_result;
     }
 
     /* 
