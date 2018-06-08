@@ -65,7 +65,6 @@ class Cmd_handler
                 case CMD_VIEW:#View single hookup profile from hookup pool
                 case CMD_REMOVE:#Remove self from hookup pool
                 case CMD_HOOKUP:#Manage hookups
-                tg_debug_message('Hookup command: '.$cmd['cmd']);#debug
                     $this->ci->load->library('commands/cmd_hookup');
                     $handled = $this->ci->cmd_hookup->handle_command($cmd);
                 break;

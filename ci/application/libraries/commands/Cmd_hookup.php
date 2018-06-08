@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-//This class handles add commands
-class Cmd_add
+//This class handles hookup related commands
+class Cmd_hookup
 {
     public $ci;
     public $current_user_id;
@@ -15,7 +15,7 @@ class Cmd_add
         $this->ci->load->model('hookup_model');# Load appropriate handler for hookups ~ this talks to the model
         $this->ci->load->model('user_model');# Load appropriate handler for hookups ~ this talks to the model
 
-        $this->current_user_id = $this->ci->telegram->get_current_user_id();
+        $this->current_user_id = tg_get_current_user_id();
 
         $this->current_user = $this->ci->user_model->get_user_data($this->current_user_id);
     }
@@ -23,7 +23,6 @@ class Cmd_add
     //Handle commands ~ all commands will start running through this function
     public function handle_command($cmd)
     {
-        tg_debug_message('In hookup handler');
         $extras = array(
             'reply_markup'=>tg_reply_keyboard_remove()
         );
@@ -152,8 +151,10 @@ class Cmd_add
     public function hookup()
     {
         $buttons = array(
-            [ tg_inline_button('Find hookups',array('callback_data'=>'/hookup find')) ],
-            [ tg_inline_button('Join hookup pool',array('callback_data'=>'/hookup add')) ],
+            [ 
+                tg_inline_button('Find hookups',array('callback_data'=>'/hookup find')),
+                tg_inline_button('Join hookup pool',array('callback_data'=>'/hookup add')),
+            ],
             [ tg_inline_button('Leave hookup pool',array('callback_data'=>'/hookup remove')) ]
         );
         $extras = array(

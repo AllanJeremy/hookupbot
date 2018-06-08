@@ -18,7 +18,7 @@ function tg_debug_message(string $message,array $extras=NULL)
 }
 
 //Send a message
-function tg_send_message($text='generic text',$chat_id=NULL,$extras=NULL)
+function tg_send_message($message='generic text',$chat_id=NULL,$extras=NULL)
 {
     $ci = &get_instance();
     return $ci->telegram->send_message($message,$chat_id,$extras);
