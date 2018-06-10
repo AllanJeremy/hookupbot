@@ -64,6 +64,7 @@ class Cmd_start
         if(!isset($user))
         {   return FALSE;   }
         
+        
         //Set base user data
         $data = array(
             'id' => $user->id,
@@ -74,9 +75,14 @@ class Cmd_start
             'language_code' => $user->language_code
         );
         
+        
         //The message to send to the user
         $message = lang('start_intro');
         $set_status = $this->ci->user_model->set_user_data($data);
+        $extras = array(
+            'parse_mode'=>'Markdown',
+            'reply_markup'=> tg_reply_keyboard_remove()
+        );
         
         //Buttons for the start message
         $buttons = array(

@@ -51,7 +51,8 @@ class User_model extends MY_Model
         if(!is_array($data))
         {   return FALSE;   }
 
-        $user_id = $user_id ?? $this->telegram->get_current_user_id();#assume current user id if none provided
+        $user_id = $user_id ?? $data['id'];//Try getting the user id from the data array
+        $user_id = $user_id ?? tg_get_current_user_id();#assume current user id if none provided
         $this->db->select(TBL_USERS.'.id');#Only select id for faster queries
         $this->db->from(TBL_USERS);
         $this->db->where(TBL_USERS.'.id',$user_id);
