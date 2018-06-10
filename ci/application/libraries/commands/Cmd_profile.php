@@ -57,7 +57,7 @@ class Cmd_profile
             break;
 
             case 'setup': #Profile setup ~ sequentially asks user to enter profile details
-                $this->profile_setup($this->current_user_id);
+                $this->profile_setup($this->current_user_id,$callback_query);
             break;
 
             case 'info': #Profile info ~ starts the queries for questions to be asked
@@ -172,7 +172,7 @@ class Cmd_profile
     }
 
     //Profile command with no sub-commands
-    public function profile($user_id=NULL)
+    public function profile($user_id=NULL,$callback_query=NULL)
     {
         $buttons = array(
             [
@@ -191,14 +191,17 @@ class Cmd_profile
     }
 
     //Profile start
-    public function profile_start($user_id=NULL)
+    public function profile_start($user_id=NULL,$callback_query=NULL)
     {
         return $this->_send_message_to_user(lang('profile_start'),$user_id);
     }
 
     //Sequential profile setup
-    public function profile_setup()
+    public function profile_setup($callback_query)
     {
+        $message = tg_send_message($attr_request_msg);
+        
+        
         //TODO: Add actual implementation
         $user_id = $user_id ?? $this->current_user_id;
         
@@ -207,11 +210,11 @@ class Cmd_profile
 
         //TODO: Show the next setup step based on the previous setup step
         $attr_request_msg = $this->get_attribute('phone');
-        tg_send_message($attr_request_msg);
+
     }
 
     //Profile get_attribute ~ request a user for a certain attribute
-    protected function get_attribute($attr,$extras=NULL,$user_id=NULL)
+    protected function get_attribute($attr,$extras=NULL,$user_id=NULL,$callback_query=NULL)
     {
         $user_id = $user_id ?? $this->current_user_id;
         
@@ -227,6 +230,7 @@ class Cmd_profile
         $this->ci->load->model('bot_trace_model');
         $set_trace_status = $this->ci->bot_trace_model->set_trace($trace_data,$user_id);
 
+
         return array(
             'ok' => (bool)$set_trace_status,
             'message' => $bot_message
@@ -237,7 +241,7 @@ class Cmd_profile
         VARIOUS ATTRIBUTE GETTERS
     */
     //Get the phone attribute
-    public function get_phone($user_id=NULL)
+    public function get_phone($user_id=NULL,$callback_query=NULL)
     {
         $buttons = [
             array(tg_button('Share Phone',TRUE))
@@ -251,7 +255,7 @@ class Cmd_profile
     }
 
     //Get the age attribute
-    public function get_age($user_id=NULL)
+    public function get_age($user_id=NULL,$callback_query=NULL)
     {
         $extras = array(
             'reply_markup' => tg_force_reply()
@@ -261,7 +265,7 @@ class Cmd_profile
     }
 
     //Get the gender attribute
-    public function get_gender($user_id=NULL)
+    public function get_gender($user_id=NULL,$callback_query=NULL)
     {
         $buttons = array(
             [
@@ -278,7 +282,7 @@ class Cmd_profile
     }
 
     //Get the gender_preference attribute
-    public function get_gender_preference($user_id=NULL)
+    public function get_gender_preference($user_id=NULL,$callback_query=NULL)
     {
         $buttons = [
             array( tg_button('Male') ),
@@ -293,7 +297,7 @@ class Cmd_profile
     }
 
     //Get the min_age attribute
-    public function get_min_age($user_id=NULL)
+    public function get_min_age($user_id=NULL,$callback_query=NULL)
     {
         $extras = array(
             'reply_markup' => tg_force_reply()
@@ -303,7 +307,7 @@ class Cmd_profile
     }
 
     //Get the max_age attribute
-    public function get_max_age($user_id=NULL)
+    public function get_max_age($user_id=NULL,$callback_query=NULL)
     {
         $extras = array(
             'reply_markup' => tg_force_reply()
@@ -313,7 +317,7 @@ class Cmd_profile
     }
     
     //Get the location attribute
-    public function get_location($user_id=NULL)
+    public function get_location($user_id=NULL,$callback_query=NULL)
     {
         $buttons = [
             array(tg_button('Share location',NULL,TRUE)),#Column 1
@@ -327,7 +331,7 @@ class Cmd_profile
     }
     
     //Get the needs_appreciation attribute
-    public function get_needs_appreciation($user_id=NULL)
+    public function get_needs_appreciation($user_id=NULL,$callback_query=NULL)
     {
         $buttons = array(
             [
@@ -344,7 +348,7 @@ class Cmd_profile
     }
     
     //Get the providing_appreciation attribute
-    public function get_providing_appreciation($user_id=NULL)
+    public function get_providing_appreciation($user_id=NULL,$callback_query=NULL)
     {
         $buttons = array(
             [
@@ -361,7 +365,7 @@ class Cmd_profile
     }
 
     //Profile set_attribute
-    public function set_attribute($attr,$value,$user_id=NULL)
+    public function set_attribute($attr,$value,$user_id=NULL,$callback_query=NULL)
     {
         $user_id = $user_id ?? $this->current_user_id;
         $message = NULL;#Message we will show to the user
@@ -406,6 +410,8 @@ class Cmd_profile
         $extras = array(
             'reply_markup'=>tg_reply_keyboard_remove()
         );
+        
+
         //Return status and message
         return array(
             'ok' => (bool)$update_status,
@@ -414,7 +420,7 @@ class Cmd_profile
     }
     
     //Profile remove attribute
-    public function remove_attribute($attr,$user_id=NULL)
+    public function remove_attribute($attr,$user_id=NULL,$callback_query=NULL)
     {
         $user_id = $user_id ?? $this->current_user_id;
         $message = NULL;
@@ -447,6 +453,7 @@ class Cmd_profile
         $extras = array(
             'reply_markup'=>tg_reply_keyboard_remove()
         );
+
         $sent_message = tg_send_message($message,$user_id,$extras);# Add reply keyboards
         //Return status and message
         return array(
@@ -457,7 +464,7 @@ class Cmd_profile
     }
 
     //Profile info ~ displays information about the profile
-    public function profile_info($user_id=NULL)
+    public function profile_info($user_id=NULL,$callback_query=NULL)
     {
         $this->ci->load->model('user_model');
         
@@ -481,12 +488,12 @@ class Cmd_profile
                 'providing_appreciation' => $user->providing_appreciation
             ));
         }
-
+        
         return tg_send_message($message,$user_id);
     }
 
     //Profile attribute info
-    public function profile_attr_info($attr,$user_id=NULL)
+    public function profile_attr_info($attr,$user_id=NULL,$callback_query=NULL)
     {
         $this->ci->load->model('user_model');#Used to get user properties
 
@@ -551,6 +558,7 @@ class Cmd_profile
         $extras = array(
             'reply_markup'=>tg_reply_keyboard_remove()
         );
+
         return tg_send_message($message,$user_id,$extras);
     }
 }

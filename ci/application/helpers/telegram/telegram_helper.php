@@ -76,5 +76,5 @@ function tg_parse_msg(string $message,array $replacements)
 //We use this whenever we make a callback query to end the progress indicator
 function tg_answer_callback_query($cb_query_id)
 {
-    return $this->answer_callback_query($cb_query_id);
+    return isset($cb_query_id) ? $this->answer_callback_query($cb_query_id) : FALSE;
 }
