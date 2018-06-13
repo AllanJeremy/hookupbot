@@ -14,6 +14,8 @@ class Cmd_profile
         $this->ci->load->model('user_model'); #For setting user records in the database
         $this->ci->lang->load('cmd_profile'); #For getting messages to be sent to the user
 
+        $this->ci->load->helper('validation');
+
         //Set the list of attributes that can be modified
         $this->_editable_attributes = array(
             'phone',
@@ -364,9 +366,30 @@ class Cmd_profile
         return $this->get_attribute('providing_appreciation',$extras,$user_id);
     }
 
+
+
     //Profile set_attribute
     public function set_attribute($attr,$value,$user_id=NULL,$callback_query=NULL)
     {
+        //If the attribute was invalid, display the attribute getter
+        if(!validate_attribute($attr,$value))
+        {
+            // Send message stating that an invalid attribute was provided
+            $invalid_msg = tg_parse_msg(lang('profile_attribute_failure'),array(
+                'action'=>'set',
+                'attribute'=>$attr
+            ));
+
+            $extras = array('reply_markup'=>tg_reply_keyboard_remove());
+            tg_send_message($message,$user_id,$extras);
+
+            // Try getting the value of the attribute once again
+            call_user_func_array(
+                array($this,'get_'.$attr),
+                array($user_id,$callback_query)
+            );
+        }
+
         $user_id = $user_id ?? $this->current_user_id;
         $message = NULL;#Message we will show to the user
         //If the value to set the attribute was not provided or was empty or is not an editable attribute ~ show error

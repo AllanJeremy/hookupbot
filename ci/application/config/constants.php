@@ -87,6 +87,10 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 /* 
 GENERAL CUSTOM CONSTANTS
 */
+define('MAX_PHONE_LENGTH',12);
+define('MIN_VALID_AGE',18);
+define('MAX_VALID_AGE',65);
+
 define('LOWER_ID_BOUND',100000);
 define('UPPER_ID_BOUND',100000000);
 

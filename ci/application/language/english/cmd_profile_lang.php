@@ -30,7 +30,7 @@ $lang['profile_get_providing_appreciation'] = "Would you be willing to pay/appre
 //Profile set attribute success or failure message
 $lang['profile_attribute_success'] = "Successfully [action] the [attribute]";
 
-$lang['profile_attribute_failure'] = "Failed to [action] the [attribute]. Invalid attribute or restricted access";
+$lang['profile_attribute_failure'] = "Failed to [action] the [attribute]. Invalid attribute provided";
 
 $lang['profile_unknown_attribute'] = "I cannot set the [attribute] attribute as I either do not know of it or I am not allowed to set it.";
 
