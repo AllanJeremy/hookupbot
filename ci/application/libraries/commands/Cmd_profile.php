@@ -521,63 +521,21 @@ class Cmd_profile
         $this->ci->load->model('user_model');#Used to get user properties
 
         $user_id = $user_id ?? $this->current_user_id;
-        $user = $this->ci->user_model->get_user_data($user_id,TRUE)->row_object(); # Get user and fetch info from it
+        $user = $this->ci->user_model->get_user_data($user_id,TRUE); # Get user and fetch info from it
         $message = lang('profile_info_missing'); # If We can't get the user, this message will be used
 
         //If the user is set, we can get user properties
         if(isset($user))
         {
-            // Determine which information to set as the message
-            switch($attr)
-            {
-                case 'phone': 
-                    $message = tg_parse_msg(lang('profile_info_phone'),array(
-                        'phone' => $user->phone
-                    ));
-                break;
-                case 'age': 
-                    $message = tg_parse_msg(lang('profile_info_age'),array(
-                        'age' => $user->age
-                    ));
-                break;
-                case 'gender': 
-                    $message = tg_parse_msg(lang('profile_info_gender'),array(
-                        'gender' => $user->gender
-                    ));
-                break;
-                case 'gender_preference': 
-                    $message = tg_parse_msg(lang('profile_info_gender_preference'),array(
-                        'gender_preference' => $user->gender_preference
-                    ));
-                break;
-                case 'min_age': 
-                    $message = tg_parse_msg(lang('profile_info_min_age'),array(
-                        'min_age' => $user->min_age
-                    ));
-                break;
-                case 'max_age': 
-                    $message = tg_parse_msg(lang('profile_info_max_age'),array(
-                        'max_age' => $user->max_age
-                    ));
-                break;
-                case 'location': 
-                    $message = tg_parse_msg(lang('profile_info_location'),array(
-                        'location' => $user->location
-                    ));
-                break;
-                case 'needs_appreciation': 
-                    $message = tg_parse_msg(lang('profile_info_needs_appreciation'),array(
-                        'needs_appreciation' => $user->needs_appreciation
-                    ));
-                break;
-                case 'providing_appreciation': 
-                    $message = tg_parse_msg(lang('profile_info_providing_appreciation'),array(
-                        'providing_appreciation' => $user->providing_appreciation
-                    ));
-                break;
-            }
-        }
+            $user = (array)$user;
+            $info_message = 'profile_info_'.$attr;# Name of the lang line for the info message
 
+            // Determine which information to set as the message
+            $message = tg_parse_msg(lang($info_message),array(
+                $attr => $user[$attr]
+            ));
+        }
+        
         $extras = array(
             'reply_markup'=>tg_reply_keyboard_remove()
         );
