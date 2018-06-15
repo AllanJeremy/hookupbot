@@ -163,25 +163,59 @@ class Cmd_hookup
         return tg_send_message($message,$this->current_user_id,$extras);
     }
 
-    //Add self to hookup pool to hookup pool
-    public function add_to_pool()
+    // Returns true if the user can join the hookup pool and false if not
+    private function _can_join_pool(string $user_id): bool
     {
+        $user = $this->ci->user_model->get_user_data($user_id);
+        
+        // Conditions that must be true for the user to be able to join 
+        $can_join = isset($user);
+        $can_join &= isset($user->phone); #Phone has to have been set
+
+        return $can_join;            
+    }
+
+    //Add self to hookup pool to hookup pool
+    public function add_to_pool($user_id=NULL)
+    {
+        $user_id = $user_id ?? $this->current_user_id;
         $data = array(
-            'hookup_user_id' => $this->current_user_id
+            'hookup_user_id' => $user_id
         );
-        $add_status = $this->ci->hookup_model->add_to_pool($data);
 
         $message = '';
-        //If we successfully to add the user to the hookup pool
-        if ($add_status)
-        {   $message = lang('pool_add_success');    }
-        else
-        {   $message = lang('pool_add_failure');    }
+        $setup_message = NULL;# Telegram message object to be returned
+        $can_join = $this->_can_join_pool($user_id); #If the current user can join hookup pool
+        
+        if($can_join)
+        {
+            //Add user to pool
+            $add_status = $this->ci->hookup_model->add_to_pool($data);
 
-        $extras = array(
-            'reply_markup'=>tg_reply_keyboard_remove()
+            //If we successfully to add the user to the hookup pool
+            if ($add_status)
+            {   $message = lang('pool_add_success');    }
+            else
+            {   $message = lang('pool_add_failure');    }
+
+            $extras = array(
+                'reply_markup'=>tg_reply_keyboard_remove()
+            );
+        }
+        else //If we cannot join the hookup pool. Ask user to setup their profile
+        {
+            $message = lang('pool_add_failure');
+            $this->ci->load->library('commands/cmd_profile');
+            $setup_message = $this->ci->cmd_profile->profile_setup($user_id); #Takes care of
+        }
+
+        //Send success or failure message
+        $success_message = tg_send_message($message,$this->current_user_id,$extras);
+
+        return array(
+            'ok' => (bool)$can_join,
+            'message' => $can_join ? $success_message : $setup_message
         );
-        return tg_send_message($message,$this->current_user_id,$extras);
     }
 
     //Remove self from hookup pool
